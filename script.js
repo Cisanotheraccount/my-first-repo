@@ -3,36 +3,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const button = document.getElementById("demoButton");
   const messageArea = document.getElementById("messageDisplay");
-  const revealItems = document.querySelectorAll(".reveal");
+  const revealItems = document.querySelectorAll("main > *");
 
-  const messages = [
-    "Large spacing makes the page feel calmer before any interaction begins.",
-    "The glass cards use soft transparency, thin borders, and shadow instead of heavy decoration.",
-    "Motion stays subtle: it supports the reading rhythm without becoming the main subject."
-  ];
+  if (button && messageArea) {
+    button.addEventListener("click", function () {
+      const currentTime = new Date().toLocaleTimeString();
+      messageArea.textContent = "Hello! You clicked the button at " + currentTime;
+      button.textContent = "Thanks for clicking!";
 
-  let messageIndex = 0;
+      setTimeout(function () {
+        button.textContent = "Click Me!";
+      }, 2000);
+    });
+  }
 
-  button.addEventListener("click", function () {
-    messageArea.textContent = messages[messageIndex];
-    messageArea.classList.add("is-active");
-    button.textContent = "Show another note";
-    messageIndex = (messageIndex + 1) % messages.length;
-  });
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
 
-  const observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.16 }
-  );
-
-  revealItems.forEach(function (item) {
-    observer.observe(item);
-  });
+    revealItems.forEach(function (item) {
+      observer.observe(item);
+    });
+  } else {
+    revealItems.forEach(function (item) {
+      item.classList.add("is-visible");
+    });
+  }
 });

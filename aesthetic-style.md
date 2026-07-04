@@ -18,8 +18,8 @@ The goal is not to copy Apple branding. The goal is to learn from its restraint:
 
 This website was modified through vibe coding: the visual direction was described in natural language first, then translated into HTML, CSS, and JavaScript. The AI-assisted process focused on:
 
-1. keeping the original website-template assignment structure,
-2. replacing placeholder content with a more personal creative-design statement,
+1. keeping the original website-template assignment structure and visible text,
+2. preserving the Module 1 HTML content while changing the visual system,
 3. refining color, composition, typography, and interaction details,
 4. testing that the page works locally before submission.
 
