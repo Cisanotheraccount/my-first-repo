@@ -12,11 +12,11 @@ The goal is not to copy Apple branding. The goal is to learn from its restraint:
 - **Typography:** system sans-serif fonts, large hero type, tight title letter spacing, and smaller uppercase labels for structure.
 - **Composition:** a simple one-page flow with a sticky header, large hero area, glass-like cards, and generous margins.
 - **Components:** rounded cards, thin translucent borders, soft shadows, pill buttons, and minimal navigation.
-- **Motion:** smooth scroll, subtle reveal-on-scroll animation, and small hover lift on buttons/cards. No heavy animation or busy effects.
+- **Motion:** smooth scroll and small hover lift on buttons/links. No heavy animation or busy effects.
 
 ## AI Assisted Coding Process
 
-This website was modified through vibe coding: the visual direction was described in natural language first, then translated into HTML, CSS, and JavaScript. The AI-assisted process focused on:
+This website was modified through vibe coding: the visual direction was described in natural language first, then translated mainly into CSS while preserving the original HTML content and JavaScript button behavior. The AI-assisted process focused on:
 
 1. keeping the original website-template assignment structure and visible text,
 2. preserving the Module 1 HTML content while changing the visual system,
