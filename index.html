@@ -31,23 +31,60 @@
   </header>
 
   <main id="top">
-    <section class="hero section-pad">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">Assignment 3 / Spatial Canvases</p>
-        <h1>Ci Song<br>Computational Design Workflows</h1>
-        <p class="hero-lede">A soft Apple-like interface for p5.js and Three.js studies, centered on a brushed titanium 3D version of my personal logo.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#spatial-canvases">View Canvas Studies</a>
-          <a class="button secondary" href="assignment3.html">Open Assignment Page</a>
+    <section class="story-hero" aria-label="Logo scroll story">
+      <div class="story-pin">
+        <div class="story-depth" aria-hidden="true">
+          <span class="depth-line depth-line-one"></span>
+          <span class="depth-line depth-line-two"></span>
+          <span class="depth-line depth-line-three"></span>
         </div>
-      </div>
 
-      <div class="hero-visual reveal" aria-label="Brushed titanium 3D logo display">
-        <div id="logo-stage"></div>
-        <p class="visual-caption">Logo V2 / titanium spatial model</p>
-      </div>
+        <div class="story-status" aria-hidden="true">
+          <span class="story-status-index" data-story-index>Scene 01</span>
+          <span class="story-status-title" data-story-title>Opening Object</span>
+        </div>
 
-      <div class="scroll-cue">Scroll to continue</div>
+        <div class="story-object" aria-label="Brushed titanium 3D logo display">
+          <div id="logo-stage"></div>
+          <p class="visual-caption">Logo V2 / titanium spatial model</p>
+        </div>
+
+        <div class="story-panels" aria-live="polite">
+          <article class="story-panel story-panel-main is-active" data-story-panel data-scene="01" data-scene-title="Opening Object">
+            <p class="eyebrow">Assignment 3 / Spatial Canvases</p>
+            <h1>Ci Song<br>Computational Design Workflows</h1>
+            <p class="hero-lede">A soft Apple-like interface for p5.js and Three.js studies, centered on a brushed titanium 3D version of my personal logo.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#spatial-canvases">View Canvas Studies</a>
+              <a class="button secondary" href="assignment3.html">Open Assignment Page</a>
+            </div>
+          </article>
+
+          <article class="story-panel story-panel-left" data-story-panel data-scene="02" data-scene-title="Object Study">
+            <p class="eyebrow">Object Study</p>
+            <h2>The logo becomes a spatial object.</h2>
+            <p>Instead of using the mark as a flat graphic, the page treats it as a small titanium object in a soft product-display space.</p>
+          </article>
+
+          <article class="story-panel story-panel-right" data-story-panel data-scene="03" data-scene-title="Scroll Reveal">
+            <p class="eyebrow">Motion System</p>
+            <h2>Scroll controls the reveal.</h2>
+            <p>The page uses blur, depth, fixed atmosphere, and staged text so scrolling feels closer to a product film than a normal class webpage.</p>
+          </article>
+
+          <article class="story-panel story-panel-bottom" data-story-panel data-scene="04" data-scene-title="Canvas Entry">
+            <p class="eyebrow">Canvas Studies</p>
+            <h2>Then the object opens into p5.js and Three.js tests.</h2>
+            <p>The following sections keep the assignment requirements visible while presenting the sketches as a continuous spatial design study.</p>
+          </article>
+        </div>
+
+        <div class="story-progress" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div class="scroll-cue">Scroll to continue</div>
+      </div>
     </section>
 
     <section class="section-pad intro-section" id="about">

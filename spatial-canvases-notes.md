@@ -19,6 +19,8 @@ The redesign uses an Apple-like visual language: white and soft gray space, brus
 
 The motion reference comes from Oryzo's website structure: one strong floating object leads the first screen, then the page scrolls into supporting content with atmosphere, blur, and staged text reveals. This site does not copy Oryzo's product, text, colors, images, or coaster model. It uses the pacing idea and adapts it to my own logo and coursework.
 
+The homepage now uses a sticky scroll storyboard. The logo stays pinned like a product-film object while four short scenes appear in sequence: opening identity, object study, scroll reveal, and canvas entry. Scroll progress controls the scene label, progress line, soft edge blur, depth lines, logo position, scale, and blur.
+
 ## 3D Logo Hero
 
 The homepage uses my SVG logo as a brushed titanium 3D object. The logo is loaded as vector paths, converted into extruded Three.js geometry, and rendered with a matte metallic material, subtle titanium grain, soft lights, orbit rings, and small particles.

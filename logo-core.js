@@ -159,7 +159,7 @@
       side: THREE.DoubleSide
     });
     const sideMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x9d9c96,
+      color: 0xb4b2ac,
       metalness: 0.8,
       roughness: 0.72,
       clearcoat: 0.06,
@@ -181,10 +181,10 @@
 
       shapes.forEach(function(shape) {
         const geometry = new THREE.ExtrudeGeometry(shape, {
-          depth: 82,
+          depth: 46,
           bevelEnabled: true,
-          bevelThickness: 1.4,
-          bevelSize: 1.2,
+          bevelThickness: 0.7,
+          bevelSize: 0.55,
           bevelSegments: 1,
           curveSegments: 36
         });
@@ -314,8 +314,8 @@
 
     const time = clock.getElapsedTime();
     const halfTurnSweep = Math.PI / 2;
-    const logoOscillation = Math.sin(time * 0.52) * halfTurnSweep;
-    const pointerTilt = pointer.x * 0.08;
+    const logoOscillation = Math.sin(time * 0.28) * halfTurnSweep;
+    const pointerTilt = pointer.x * 0.055;
 
     coreGroup.position.y = Math.sin(time * 1.05) * 0.13;
     coreGroup.rotation.y = Math.max(-halfTurnSweep, Math.min(halfTurnSweep, logoOscillation + pointerTilt));
