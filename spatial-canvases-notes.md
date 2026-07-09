@@ -15,20 +15,20 @@ The website includes:
 
 ## Visual Direction
 
-The redesign uses an Apple-like visual language: white and soft gray space, silver material, precise typography, light glass surfaces, and calm motion.
+The redesign uses an Apple-like visual language: white and soft gray space, brushed titanium material, precise typography, light glass surfaces, and calm motion.
 
 The motion reference comes from Oryzo's website structure: one strong floating object leads the first screen, then the page scrolls into supporting content with atmosphere, blur, and staged text reveals. This site does not copy Oryzo's product, text, colors, images, or coaster model. It uses the pacing idea and adapts it to my own logo and coursework.
 
 ## 3D Logo Hero
 
-The homepage uses my SVG logo as a silver 3D object. The logo is loaded as vector paths, converted into extruded Three.js geometry, and rendered with metallic material, bevels, soft lights, subtle orbit rings, and small particles.
+The homepage uses my SVG logo as a brushed titanium 3D object. The logo is loaded as vector paths, converted into extruded Three.js geometry, and rendered with a matte metallic material, subtle titanium grain, soft lights, orbit rings, and small particles.
 
 The animation is intentionally controlled:
 
 - slow rotation
 - light floating motion
 - small pointer-based camera feel
-- soft silver highlights
+- soft titanium highlights
 - scroll-based depth blur and movement
 - fixed soft edge glow around the page
 - text and canvas modules revealing from blur into sharp focus

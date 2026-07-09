@@ -1,4 +1,4 @@
-// Builds the silver 3D logo hero from the SVG asset.
+// Builds the titanium 3D logo hero from the SVG asset.
 (function() {
   const target = document.getElementById("logo-stage");
 
@@ -52,24 +52,24 @@
   }
 
   function addLighting() {
-    scene.add(new THREE.AmbientLight(0xffffff, 0.68));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.74));
 
-    const hemi = new THREE.HemisphereLight(0xffffff, 0xdfe7f2, 0.72);
+    const hemi = new THREE.HemisphereLight(0xf8fbff, 0xc5ccd4, 0.74);
     scene.add(hemi);
 
-    const key = new THREE.DirectionalLight(0xffffff, 1.2);
-    key.position.set(3.8, 5.4, 5.8);
+    const key = new THREE.DirectionalLight(0xffffff, 0.96);
+    key.position.set(4.2, 5.2, 5.8);
     scene.add(key);
 
-    const front = new THREE.DirectionalLight(0xffffff, 1.05);
+    const front = new THREE.DirectionalLight(0xf8fbff, 0.78);
     front.position.set(0, 0.8, 6.5);
     scene.add(front);
 
-    const rim = new THREE.DirectionalLight(0xcfe5ff, 0.9);
+    const rim = new THREE.DirectionalLight(0xcfe2ff, 0.72);
     rim.position.set(-5.4, 2.8, -3.2);
     scene.add(rim);
 
-    const glint = new THREE.PointLight(0xffffff, 1.1, 15);
+    const glint = new THREE.PointLight(0xffffff, 0.58, 15);
     glint.position.set(0, 3.8, 4.2);
     scene.add(glint);
   }
@@ -140,52 +140,58 @@
 
   function buildExtrudedLogo(data) {
     const rawLogo = new THREE.Group();
+    const titaniumTexture = createTitaniumTexture(1);
+    const titaniumBump = createTitaniumTexture(2);
+
     const frontMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xe0e7f0,
-      metalness: 0.74,
-      roughness: 0.16,
-      clearcoat: 1,
-      clearcoatRoughness: 0.12,
-      reflectivity: 0.92,
-      emissive: 0x2f3540,
-      emissiveIntensity: 0.025,
+      color: 0xd4d0c8,
+      metalness: 0.78,
+      roughness: 0.66,
+      clearcoat: 0.08,
+      clearcoatRoughness: 0.86,
+      reflectivity: 0.28,
+      map: titaniumTexture,
+      roughnessMap: titaniumTexture,
+      bumpMap: titaniumBump,
+      bumpScale: 0.026,
+      emissive: 0x1b1b19,
+      emissiveIntensity: 0.008,
       side: THREE.DoubleSide
     });
     const sideMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xa8b3c0,
-      metalness: 0.82,
-      roughness: 0.22,
-      clearcoat: 0.72,
-      clearcoatRoughness: 0.18,
-      emissive: 0x222832,
-      emissiveIntensity: 0.018,
+      color: 0x9d9c96,
+      metalness: 0.8,
+      roughness: 0.72,
+      clearcoat: 0.06,
+      clearcoatRoughness: 0.9,
+      map: titaniumTexture,
+      roughnessMap: titaniumTexture,
+      bumpMap: titaniumBump,
+      bumpScale: 0.018,
+      emissive: 0x171715,
+      emissiveIntensity: 0.006,
       side: THREE.DoubleSide
     });
-    const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.5
-    });
+
+    applyTitaniumShader(frontMaterial, 0.085);
+    applyTitaniumShader(sideMaterial, 0.065);
 
     data.paths.forEach(function(path) {
       const shapes = THREE.SVGLoader.createShapes(path);
 
       shapes.forEach(function(shape) {
         const geometry = new THREE.ExtrudeGeometry(shape, {
-          depth: 160,
+          depth: 82,
           bevelEnabled: true,
-          bevelThickness: 22,
-          bevelSize: 18,
-          bevelSegments: 8,
+          bevelThickness: 1.4,
+          bevelSize: 1.2,
+          bevelSegments: 1,
           curveSegments: 36
         });
         geometry.computeVertexNormals();
 
         const mesh = new THREE.Mesh(geometry, [frontMaterial, sideMaterial]);
         rawLogo.add(mesh);
-
-        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(geometry, 18), edgeMaterial);
-        rawLogo.add(edge);
       });
     });
 
@@ -206,6 +212,80 @@
     rawLogo.position.z = -0.2;
 
     return rawLogo;
+  }
+
+  function applyTitaniumShader(material, intensity) {
+    material.onBeforeCompile = function(shader) {
+      shader.vertexShader = `
+        varying vec3 vTitaniumPosition;
+      ` + shader.vertexShader.replace(
+        "#include <begin_vertex>",
+        `
+          #include <begin_vertex>
+          vTitaniumPosition = position;
+        `
+      );
+
+      shader.fragmentShader = `
+        varying vec3 vTitaniumPosition;
+      ` + shader.fragmentShader.replace(
+        "#include <color_fragment>",
+        `
+          #include <color_fragment>
+          float brushedA = sin(vTitaniumPosition.y * 0.034 + vTitaniumPosition.x * 0.004);
+          float brushedB = sin(vTitaniumPosition.y * 0.091 + vTitaniumPosition.x * 0.013);
+          float fineNoise = fract(sin(dot(vTitaniumPosition.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
+          float titaniumGrain = 1.0 + (${intensity.toFixed(3)} * brushedA) + (${(intensity * 0.52).toFixed(3)} * brushedB) + (${(intensity * 0.42).toFixed(3)} * fineNoise);
+          diffuseColor.rgb *= clamp(titaniumGrain, 0.78, 1.18);
+        `
+      );
+    };
+    material.needsUpdate = true;
+  }
+
+  function createTitaniumTexture(seed) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const context = canvas.getContext("2d");
+    const image = context.createImageData(canvas.width, canvas.height);
+    let randomState = seed * 9973;
+
+    function seededRandom() {
+      randomState = (randomState * 16807) % 2147483647;
+      return (randomState - 1) / 2147483646;
+    }
+
+    for (let y = 0; y < canvas.height; y++) {
+      const rowGrain = (seededRandom() - 0.5) * 18;
+      const longGrain = Math.sin(y * 0.035) * 13;
+      const fineGrain = Math.sin(y * 0.42) * 5;
+
+      for (let x = 0; x < canvas.width; x++) {
+        const random = (seededRandom() - 0.5) * 10;
+        const diagonal = Math.sin((x * 0.55 + y * 0.18) * 0.08) * 7;
+        const brushedLine = Math.sin(y * 2.4 + x * 0.012) * 4;
+        const scratch = seededRandom() > 0.994 ? 26 : 0;
+        const value = Math.max(0, Math.min(255, 184 + rowGrain + longGrain + fineGrain + diagonal + brushedLine + random + scratch));
+        const index = (y * canvas.width + x) * 4;
+        image.data[index] = value + 12;
+        image.data[index + 1] = value + 10;
+        image.data[index + 2] = value + 6;
+        image.data[index + 3] = 255;
+      }
+    }
+
+    context.putImageData(image, 0, 0);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1.45, 3.8);
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy
+      ? Math.min(8, renderer.capabilities.getMaxAnisotropy())
+      : 1;
+    texture.needsUpdate = true;
+    return texture;
   }
 
   function bindEvents() {
