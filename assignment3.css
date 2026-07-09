@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Style the entire body of the webpage */
 body {
   margin: 0;
@@ -114,7 +118,10 @@ p {
 
 /* Style for canvas containers to add spacing between them */
 #canvas-container-1,
-#canvas-container-2 {
+#canvas-container-2,
+#threejs-container-1,
+#threejs-container-2,
+#threejs-container-3 {
   margin-bottom: 40px;
   border: 1px solid #e2e2e2;
   border-radius: 8px;
@@ -124,7 +131,10 @@ p {
 }
 
 #canvas-container-1 canvas,
-#canvas-container-2 canvas {
+#canvas-container-2 canvas,
+#threejs-container-1 canvas,
+#threejs-container-2 canvas,
+#threejs-container-3 canvas {
   display: block;
   width: 100% !important;
   height: auto !important;
@@ -138,6 +148,12 @@ p {
 .next-link {
   margin: 28px 0 70px;
   font-size: 14px;
+}
+
+.section-divider {
+  height: 1px;
+  margin: 72px 0 52px;
+  background: #deded8;
 }
 
 .next-link a {

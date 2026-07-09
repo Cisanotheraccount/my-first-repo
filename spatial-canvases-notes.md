@@ -2,7 +2,7 @@
 
 ## Assignment Focus
 
-This set of pages completes Assignment 3: Spatial Canvases through a p5.js 2D page and a Three.js 3D page.
+This main page completes Assignment 3: Spatial Canvases through a p5.js 2D section and a Three.js 3D section on one webpage.
 
 The website includes:
 
@@ -24,7 +24,7 @@ The p5.js HTML page follows the course tutorial structure:
 
 ## Three.js Tutorial Structure Followed
 
-The Three.js HTML page follows the course tutorial structure:
+The Three.js section follows the course tutorial structure:
 
 - load Three.js in the head with the CDN script
 - load OrbitControls for interactive camera movement

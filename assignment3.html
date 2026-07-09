@@ -11,6 +11,14 @@
   <!-- REQUIRED: Load p5.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
   <!-- This loads the p5.js library which provides functions for creating graphics and animations -->
+
+  <!-- REQUIRED: Load Three.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- This loads the Three.js library which provides functions for creating 3D graphics -->
+
+  <!-- Load Three.js OrbitControls from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- This loads the OrbitControls module for interactive camera controls -->
   <!-- ------------------------------------------------------------ -->
 
   <meta charset="UTF-8">
@@ -45,11 +53,11 @@
       <!-- This div creates a container for the center of the header -->
       Computational Design Workflows<br>
       <!-- This is the main text in the center -->
-      <span>Spatial Canvases in p5.js</span>
+      <span>Spatial Canvases in p5.js and Three.js</span>
       <!-- span is an inline element that groups text without creating a new line -->
     </div>
 
-    <div class="right"><a href="assignment3-three.html">Three.js</a></div>
+    <div class="right"><a href="#threejs-section">Three.js</a></div>
     <!-- This div creates a container for the right side of the header -->
   </header>
 
@@ -65,13 +73,13 @@
     <div class="project-subtitle">Ci Song</div>
     <!-- This div displays the student's name as a subtitle -->
 
-    <div class="advisor">P5.js studies in primitive form, motion, and interaction</div>
+    <div class="advisor">P5.js and Three.js studies in primitive form, motion, interaction, and depth</div>
     <!-- This div displays a short project description -->
 
-    <div class="section-title">Digital Object 1: Spatial Canvases</div>
+    <div class="section-title">Digital Object 1: Spatial Canvases / P5.js 2D</div>
     <!-- Section heading for the p5.js canvas demonstration -->
 
-    <p>This page follows the course tutorials for 2D Spatial Canvas P5 and Managing Multiple P5.js Canvases. I used p5.js instance mode so each canvas has its own sketch, its own variables, and its own container on the webpage.</p>
+    <p>This page follows the course tutorials for 2D Spatial Canvas P5, Managing Multiple P5.js Canvases, and 3D Canvas ThreeJS. I used separate canvas containers so each sketch has its own space on the webpage.</p>
 
     <p>My design interest here is a soft computational composition: clean space, quiet color, and simple geometric systems that can shift from static layout into motion. The sketches connect my creative background in digital media, photography, animation, 3D modeling, and AIGC with a beginner-friendly coding workflow.</p>
 
@@ -91,8 +99,33 @@
     <div id="canvas-container-2"></div>
 
     <div class="next-link">
-      <a href="assignment3-three.html">Continue to the Three.js spatial canvases</a>
+      <a href="#threejs-section">Continue to the Three.js spatial canvases below</a>
     </div>
+
+    <div class="section-divider" id="threejs-section"></div>
+
+    <div class="section-title">Digital Object 1: Spatial Canvases / Three.js 3D</div>
+    <!-- Section heading for the Three.js canvas demonstration -->
+
+    <p>The second part translates the same soft computational direction into 3D space. Each Three.js sketch creates a scene, camera, WebGL renderer, lights, primitive geometry, and an animation loop.</p>
+
+    <div class="section-title">3D Primitives With Rotating Box</div>
+    <p>A simple scene with a rotating cube on a wireframe grid. This follows the beginner setup: scene, camera, renderer, lights, a primitive mesh, and an animation loop.</p>
+
+    <!-- Canvas container for first Three.js sketch -->
+    <div id="threejs-container-1"></div>
+
+    <div class="section-title">Interactive 3D Scene With Orbit Controls</div>
+    <p>An interactive scene with box, sphere, cylinder, cone, repeated small spheres, and orbit camera controls. Drag the canvas to orbit around the geometry.</p>
+
+    <!-- Canvas container for second Three.js sketch -->
+    <div id="threejs-container-2"></div>
+
+    <div class="section-title">Atmospheric Geometry</div>
+    <p>A fog-based scene with transparent primitives and layered depth. It keeps the tutorial's primitive geometry approach while adding a softer atmospheric mood.</p>
+
+    <!-- Canvas container for third Three.js sketch -->
+    <div id="threejs-container-3"></div>
 
     <!-- ------------------------------------------------------------ -->
   </main>
@@ -102,6 +135,9 @@
   <!-- REQUIRED: Load your sketch files -->
   <script src="2d-static-composition.js"></script>
   <script src="2d-interactive-field.js"></script>
+  <script src="3d-primitive-composition.js"></script>
+  <script src="3d-orbit-primitives.js"></script>
+  <script src="3d-atmospheric-geometry.js"></script>
   <!-- ------------------------------------------------------------ -->
 </body>
 <!-- End of body - all visible content goes above this line -->
