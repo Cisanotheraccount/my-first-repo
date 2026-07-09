@@ -17,7 +17,7 @@ The website includes:
 
 The redesign uses an Apple-like visual language: white and soft gray space, silver material, precise typography, light glass surfaces, and calm motion.
 
-The motion reference comes from Oryzo's website structure: one strong floating object leads the first screen, then the page scrolls into supporting content. This site does not copy Oryzo's product, text, colors, images, or coaster model. It uses the pacing idea and adapts it to my own logo and coursework.
+The motion reference comes from Oryzo's website structure: one strong floating object leads the first screen, then the page scrolls into supporting content with atmosphere, blur, and staged text reveals. This site does not copy Oryzo's product, text, colors, images, or coaster model. It uses the pacing idea and adapts it to my own logo and coursework.
 
 ## 3D Logo Hero
 
@@ -29,6 +29,9 @@ The animation is intentionally controlled:
 - light floating motion
 - small pointer-based camera feel
 - soft silver highlights
+- scroll-based depth blur and movement
+- fixed soft edge glow around the page
+- text and canvas modules revealing from blur into sharp focus
 
 The goal is a polished object-display feeling, closer to an Apple product detail page than a game or cyberpunk scene.
 

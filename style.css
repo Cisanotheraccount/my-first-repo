@@ -10,6 +10,12 @@
   --blue-soft: #e7f2ff;
   --panel: rgba(255, 255, 255, 0.72);
   --shadow: 0 22px 70px rgba(18, 24, 38, 0.1);
+  --scroll-progress: 0;
+  --hero-logo-blur: 0px;
+  --hero-logo-scale: 1;
+  --hero-logo-y: 0px;
+  --hero-copy-y: 0px;
+  --atmosphere-shift: 0px;
 }
 
 * {
@@ -30,6 +36,53 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+.scroll-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.atmosphere-blur {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  filter: blur(42px);
+  opacity: calc(0.42 + var(--scroll-progress) * 0.26);
+  backdrop-filter: blur(18px) saturate(1.08);
+  transform: translate3d(0, var(--atmosphere-shift), 0);
+  will-change: transform, opacity;
+}
+
+.blur-left {
+  top: 18vh;
+  left: -130px;
+  width: 300px;
+  height: 62vh;
+  background: linear-gradient(180deg, rgba(206, 224, 246, 0.62), rgba(255, 255, 255, 0.16));
+  mask-image: linear-gradient(90deg, black 0%, black 46%, transparent 100%);
+}
+
+.blur-right {
+  top: 8vh;
+  right: -150px;
+  width: 340px;
+  height: 72vh;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(196, 216, 244, 0.56), rgba(255, 255, 255, 0.16));
+  mask-image: linear-gradient(270deg, black 0%, black 48%, transparent 100%);
+}
+
+.blur-bottom {
+  right: 6vw;
+  bottom: -180px;
+  width: 52vw;
+  height: 320px;
+  background: rgba(209, 224, 244, 0.62);
+  filter: blur(64px);
+  mask-image: linear-gradient(to top, black 0%, transparent 100%);
+}
+
 body::before {
   position: fixed;
   inset: 0;
@@ -46,6 +99,15 @@ body::before {
 
 a {
   color: inherit;
+}
+
+main,
+.site-header {
+  position: relative;
+}
+
+main {
+  z-index: 1;
 }
 
 .site-header {
@@ -102,6 +164,33 @@ a {
   min-height: calc(100svh - 68px);
   padding-top: clamp(52px, 8vw, 96px);
   padding-bottom: clamp(52px, 7vw, 88px);
+}
+
+.hero::before,
+.hero::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(34px);
+}
+
+.hero::before {
+  right: 6%;
+  top: 23%;
+  width: min(420px, 38vw);
+  height: min(420px, 38vw);
+  background: rgba(218, 231, 249, 0.48);
+  opacity: calc(0.38 + var(--scroll-progress) * 0.18);
+}
+
+.hero::after {
+  right: 15%;
+  bottom: 18%;
+  width: min(520px, 46vw);
+  height: 160px;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .eyebrow,
@@ -161,6 +250,11 @@ p {
   line-height: 1.48;
 }
 
+.hero-copy {
+  transform: translate3d(0, var(--hero-copy-y), 0);
+  will-change: transform;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -200,7 +294,12 @@ p {
 .hero-visual {
   position: relative;
   min-height: clamp(360px, 50vw, 620px);
+  filter: blur(var(--hero-logo-blur));
+  transform: translate3d(0, var(--hero-logo-y), 0) scale(var(--hero-logo-scale));
+  transform-origin: center;
   isolation: isolate;
+  transition: filter 80ms linear, transform 80ms linear;
+  will-change: transform, filter;
 }
 
 #logo-stage {
@@ -328,6 +427,7 @@ p {
   align-items: center;
   padding: clamp(34px, 6vw, 72px) 0;
   border-top: 1px solid var(--line);
+  transform-style: preserve-3d;
 }
 
 .canvas-module:last-child {
@@ -339,6 +439,7 @@ p {
 }
 
 .canvas-shell {
+  position: relative;
   overflow: hidden;
   min-height: 260px;
   border: 1px solid rgba(255, 255, 255, 0.88);
@@ -346,6 +447,20 @@ p {
   background: rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px);
+  transform: translateZ(0);
+  transition: filter 900ms ease, transform 900ms ease, opacity 900ms ease;
+}
+
+.canvas-shell::before {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.42), transparent 35%),
+    radial-gradient(circle at 18% 12%, rgba(218, 232, 252, 0.42), transparent 38%);
+  mix-blend-mode: screen;
 }
 
 .canvas-shell canvas,
@@ -394,13 +509,41 @@ p {
 
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 720ms ease, transform 720ms ease;
+  filter: blur(18px);
+  transform: translate3d(0, 52px, 0) scale(0.985);
+  transition: opacity 1050ms cubic-bezier(0.19, 1, 0.22, 1), filter 1050ms cubic-bezier(0.19, 1, 0.22, 1), transform 1050ms cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: opacity, filter, transform;
+}
+
+.reveal:nth-of-type(2n) {
+  transform: translate3d(0, 64px, 0) scale(0.98);
 }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.hero-copy.reveal.is-visible {
+  transform: translate3d(0, var(--hero-copy-y), 0) scale(1);
+}
+
+.hero-visual.reveal.is-visible {
+  filter: blur(var(--hero-logo-blur));
+  transform: translate3d(0, var(--hero-logo-y), 0) scale(var(--hero-logo-scale));
+}
+
+.canvas-module:not(.is-visible) .canvas-shell {
+  opacity: 0.58;
+  filter: blur(14px) saturate(0.72);
+  transform: translate3d(0, 28px, 0) scale(0.965);
+}
+
+.canvas-module.is-visible .canvas-shell {
+  opacity: 1;
+  filter: blur(0) saturate(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -410,12 +553,24 @@ p {
 
   .button,
   .site-header nav a,
+  .hero-visual,
   .reveal {
     transition: none;
   }
 
+  .scroll-atmosphere {
+    display: none;
+  }
+
+  .hero-copy,
+  .hero-visual {
+    filter: none;
+    transform: none;
+  }
+
   .reveal {
     opacity: 1;
+    filter: none;
     transform: none;
   }
 }
