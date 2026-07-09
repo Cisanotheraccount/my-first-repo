@@ -313,8 +313,12 @@
     frameId = requestAnimationFrame(animate);
 
     const time = clock.getElapsedTime();
+    const halfTurnSweep = Math.PI / 2;
+    const logoOscillation = Math.sin(time * 0.52) * halfTurnSweep;
+    const pointerTilt = pointer.x * 0.08;
+
     coreGroup.position.y = Math.sin(time * 1.05) * 0.13;
-    coreGroup.rotation.y = time * 0.24 + pointer.x * 0.13;
+    coreGroup.rotation.y = Math.max(-halfTurnSweep, Math.min(halfTurnSweep, logoOscillation + pointerTilt));
     coreGroup.rotation.x = Math.sin(time * 0.72) * 0.035 - pointer.y * 0.055;
 
     if (ringA) {
