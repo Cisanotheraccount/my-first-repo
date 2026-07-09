@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- This tells the browser this is an HTML5 document - always include this at the top -->
+<html lang="en">
+<!-- The html tag is the root element that contains everything on the page -->
+<!-- lang="en" tells the browser this page is in English -->
+
+<head>
+  <!-- The head section contains information about the page, not visible content -->
+
+  <!-- ------------------------------------------------------------ -->
+  <!-- REQUIRED: Load p5.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <!-- This loads the p5.js library which provides functions for creating graphics and animations -->
+  <!-- ------------------------------------------------------------ -->
+
+  <meta charset="UTF-8">
+  <!-- This sets the character encoding to UTF-8, which supports special characters and emojis -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- This makes the page scale correctly on phones and tablets -->
+
+  <title>Assignment 3 - Spatial Canvases</title>
+  <!-- This is the title that appears in the browser tab and bookmarks -->
+
+  <link rel="icon" href="data:,">
+  <!-- This prevents the browser from requesting a missing favicon file -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- This loads the Roboto font from Google Fonts for use on our page -->
+
+  <link rel="stylesheet" href="assignment3.css">
+  <!-- This links our CSS file to style the page -->
+</head>
+
+<body>
+  <!-- The body contains all the visible content that users will see on the page -->
+
+  <header>
+    <!-- The header is typically used for navigation and site branding -->
+
+    <div class="left">Columbia GSAPP</div>
+    <!-- This div creates a container for the left side of the header -->
+
+    <div class="center">
+      <!-- This div creates a container for the center of the header -->
+      Computational Design Workflows<br>
+      <!-- This is the main text in the center -->
+      <span>Spatial Canvases in p5.js</span>
+      <!-- span is an inline element that groups text without creating a new line -->
+    </div>
+
+    <div class="right"><a href="index.html">Home</a></div>
+    <!-- This div creates a container for the right side of the header -->
+  </header>
+
+  <main>
+    <!-- The main tag contains the primary content of the page -->
+
+    <div class="project-meta">Assignment 3 / 2026</div>
+    <!-- This div displays the project metadata -->
+
+    <div class="project-title">Spatial Canvases</div>
+    <!-- This div displays the main project title -->
+
+    <div class="project-subtitle">Ci Song</div>
+    <!-- This div displays the student's name as a subtitle -->
+
+    <div class="advisor">P5.js studies in primitive form, motion, and interaction</div>
+    <!-- This div displays a short project description -->
+
+    <div class="section-title">Digital Object 1: Spatial Canvases</div>
+    <!-- Section heading for the p5.js canvas demonstration -->
+
+    <p>This page follows the course tutorials for 2D Spatial Canvas P5 and Managing Multiple P5.js Canvases. I used p5.js instance mode so each canvas has its own sketch, its own variables, and its own container on the webpage.</p>
+
+    <p>My design interest here is a soft computational composition: clean space, quiet color, and simple geometric systems that can shift from static layout into motion. The sketches connect my creative background in digital media, photography, animation, 3D modeling, and AIGC with a beginner-friendly coding workflow.</p>
+
+    <!-- ------------------------------------------------------------ -->
+    <!-- ADD A NEW CANVAS CONTAINER FOR EACH NEW P5.JS SKETCH -->
+
+    <div class="section-title">2D Static Drawing With Primitives</div>
+    <p>The first canvas is a static composition made with primitive shapes: rectangles, ellipses, lines, and triangles. It uses a light grid and layered forms to study balance, depth, and color.</p>
+
+    <!-- Canvas container for first p5.js sketch -->
+    <div id="canvas-container-1"></div>
+
+    <div class="section-title">Animated And Interactive Drawing</div>
+    <p>The second canvas is animated and interactive. Move the mouse across the canvas to bend the field; click inside the canvas to pause or restart the motion.</p>
+
+    <!-- Canvas container for second p5.js sketch -->
+    <div id="canvas-container-2"></div>
+
+    <!-- ------------------------------------------------------------ -->
+  </main>
+  <!-- End of main content area -->
+
+  <!-- ------------------------------------------------------------ -->
+  <!-- REQUIRED: Load your sketch files -->
+  <script src="2d-static-composition.js"></script>
+  <script src="2d-interactive-field.js"></script>
+  <!-- ------------------------------------------------------------ -->
+</body>
+<!-- End of body - all visible content goes above this line -->
+
+</html>
+<!-- End of HTML document -->
