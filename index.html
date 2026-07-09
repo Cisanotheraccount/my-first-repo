@@ -1,113 +1,148 @@
 <!DOCTYPE html>
-<!-- This tells the browser this is an HTML5 document - always include this at the top -->
 <html lang="en">
-<!-- The html tag is the root element that contains everything on the page -->
-<!-- lang="en" tells the browser this page is in English -->
 
 <head>
-  <!-- The head section contains information about the page, not visible content -->
-  
   <meta charset="UTF-8">
-  <!-- This sets the character encoding to UTF-8, which supports special characters and emojis -->
-  
-  <title>Module 1</title>
-  <!-- This is the title that appears in the browser tab and bookmarks -->
-  
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <!-- This loads the Roboto font from Google Fonts for use on our page -->
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ci Song - Spatial Canvases</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="style.css">
-  <!-- This links our CSS file to style the page - the href points to our style.css file -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 
 <body>
-  <!-- The body contains all the visible content that users will see on the page -->
-  
-  <header>
-    <!-- The header is typically used for navigation and site branding -->
-    
-    <div class="left">Columbia GSAPP</div>
-    <!-- This div creates a container for the left side of the header -->
-    <!-- class="left" allows us to style this specific div with CSS -->
-    
-    <div class="center">
-      <!-- This div creates a container for the center of the header -->
-      Computational Design Practices<br>
-      <!-- This is the main text in the center -->
-      <!-- <br> creates a line break, moving the next text to a new line -->
-      <span>Project Archive</span>
-      <!-- span is an inline element that groups text without creating a new line -->
-      <!-- class="center" allows us to style this span differently -->
-    </div>
-    
-    <div class="right"><a href="#">About</a></div>
-    <!-- This div creates a container for the right side of the header -->
-    <!-- <a href="#">About</a> creates a clickable link (currently goes nowhere with #) -->
+  <header class="site-header">
+    <a class="site-mark" href="#top">Columbia GSAPP</a>
+    <nav aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#spatial-canvases">Assignment 3</a>
+      <a href="archive-before-redesign/">Archive</a>
+    </nav>
   </header>
 
-  <main>
-    <!-- The main tag contains the primary content of the page -->
-    
-    <div class="project-meta">2025</div>
-    <!-- This div displays the year/project metadata -->
-    <!-- class="project-meta" allows us to style this with CSS -->
-    
-    <div class="project-title">Ci's First Website</div>
-    <!-- This div displays the main project title -->
-    <!-- class="project-title" allows us to style this with CSS -->
-    
-    <div class="project-subtitle">Ci Song</div>
-    <!-- This div displays the student's name as a subtitle -->
-    <!-- class="project-subtitle" allows us to style this with CSS -->
-    
-    <div class="advisor">Catherine Griffiths<br><strong>Advisor Name</strong></div>
-    <!-- This div displays advisor information -->
-    <!-- <br> creates a line break -->
-    <!-- <strong> makes the text bold for emphasis -->
-    
-    <div class="section-title">Abstract</div>
-    <!-- This div creates a section heading -->
-    <!-- class="section-title" allows us to style all section titles consistently -->
-    
-    <p>I am a Creative Designer based in New York. It all started when I was little. Both of my parents are artists. They brought me to travel the world with brushes and paint. However, I never thought I would study art one day until I took a graphic design class in my sophomore year of high school. This class changed everything I know about art and made me start to fall in love with digital media. Later, I learned photography, animation made the X Rounds, 3D modeling made the Light Up, and AIGC, and tried all the new media I had not used. I tried to follow the trend of new media, and hopefully one day I can lead the trend.</p>
-    <!-- <p> creates a paragraph element for text content -->
-    <!-- This is placeholder text (Lorem ipsum) commonly used in web design -->
-    
-    <div class="section-title">Motivation</div>
-    <!-- Another section heading for the Motivation section -->
-    
-    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
-    <!-- Another paragraph with placeholder text for the Motivation section -->
-    
-    <div class="section-title">Methodology</div>
-    <!-- Section heading for the Methodology section -->
-    
-    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
-    <!-- Another paragraph with placeholder text for the Methodology section -->
-    
-    <div class="section-title">Interactive Demo</div>
-    <!-- Section heading for our JavaScript demonstration -->
-    
-    <p>Click the button below to see JavaScript in action:</p>
-    <!-- Instructions for the user -->
-    
-    <button id="demoButton">Click Me!</button>
-    <!-- This creates a clickable button -->
-    <!-- id="demoButton" gives this button a unique identifier so JavaScript can find it -->
-    <!-- The text "Click Me!" is what users will see on the button -->
-    
-    <div id="messageDisplay"></div>
-    <!-- This div will be used by JavaScript to show messages -->
-    <!-- id="messageDisplay" gives this div a unique identifier -->
-    <!-- It starts empty but JavaScript will add content to it -->
+  <main id="top">
+    <section class="hero section-pad">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">Assignment 3 / Spatial Canvases</p>
+        <h1>Ci Song<br>Computational Design Workflows</h1>
+        <p class="hero-lede">A soft Apple-like interface for p5.js and Three.js studies, centered on a silver 3D version of my personal logo.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#spatial-canvases">View Canvas Studies</a>
+          <a class="button secondary" href="assignment3.html">Open Assignment Page</a>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" aria-label="Silver 3D logo display">
+        <div id="logo-stage"></div>
+        <p class="visual-caption">Logo V2 / silver spatial model</p>
+      </div>
+
+      <div class="scroll-cue">Scroll to continue</div>
+    </section>
+
+    <section class="section-pad intro-section" id="about">
+      <div class="section-grid">
+        <div>
+          <p class="eyebrow">Creative Direction</p>
+          <h2>From digital media to spatial code.</h2>
+        </div>
+        <div class="text-stack reveal">
+          <p>I am a Creative Designer based in New York. It all started when I was little. Both of my parents are artists, and they brought me to travel the world with brushes and paint.</p>
+          <p>A graphic design class in high school changed how I understood art and made me fall in love with digital media. Later, I explored photography, animation, 3D modeling, and AIGC, following new media tools while building my own design language.</p>
+        </div>
+      </div>
+
+      <div class="spec-grid reveal">
+        <article>
+          <span>Course</span>
+          <strong>Computational Design Workflows</strong>
+        </article>
+        <article>
+          <span>Student</span>
+          <strong>Ci Song</strong>
+        </article>
+        <article>
+          <span>Focus</span>
+          <strong>p5.js, Three.js, spatial composition</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-pad canvas-intro" id="spatial-canvases">
+      <p class="eyebrow">Spatial Canvas System</p>
+      <h2>Primitive shapes, motion, interaction, and depth.</h2>
+      <p class="wide-copy reveal">This page keeps the course tutorial requirements while presenting the sketches as a polished computational design study. The p5.js section focuses on 2D primitive drawing and interaction. The Three.js section translates the same soft geometric language into 3D space.</p>
+    </section>
+
+    <section class="lab-list" aria-label="Assignment 3 canvas studies">
+      <article class="canvas-module reveal">
+        <div class="module-copy">
+          <p class="module-index">01 / P5.js</p>
+          <h3>Static Study</h3>
+          <p>A static 2D drawing made with rectangles, ellipses, lines, and triangles. The composition studies balance, depth, and quiet color through primitive shapes.</p>
+        </div>
+        <div class="canvas-shell" id="canvas-container-1"></div>
+      </article>
+
+      <article class="canvas-module reveal">
+        <div class="module-copy">
+          <p class="module-index">02 / P5.js</p>
+          <h3>Interactive Field</h3>
+          <p>An animated drawing that responds to the mouse. Move across the canvas to bend the field; click inside the canvas to pause or restart the motion.</p>
+        </div>
+        <div class="canvas-shell" id="canvas-container-2"></div>
+      </article>
+
+      <article class="canvas-module reveal">
+        <div class="module-copy">
+          <p class="module-index">03 / Three.js</p>
+          <h3>Primitive Model</h3>
+          <p>A beginner Three.js scene with camera, renderer, lights, grid, a rotating primitive mesh, and an animation loop.</p>
+        </div>
+        <div class="canvas-shell" id="threejs-container-1"></div>
+      </article>
+
+      <article class="canvas-module reveal">
+        <div class="module-copy">
+          <p class="module-index">04 / Three.js</p>
+          <h3>Orbit Study</h3>
+          <p>An interactive 3D scene with primitive geometry and OrbitControls. Drag the canvas to orbit around the forms.</p>
+        </div>
+        <div class="canvas-shell" id="threejs-container-2"></div>
+      </article>
+
+      <article class="canvas-module reveal">
+        <div class="module-copy">
+          <p class="module-index">05 / Three.js</p>
+          <h3>Atmospheric Geometry</h3>
+          <p>A fog-based scene with transparent primitives and layered depth, extending the tutorial structure into a softer spatial mood.</p>
+        </div>
+        <div class="canvas-shell" id="threejs-container-3"></div>
+      </article>
+    </section>
+
+    <section class="section-pad closing-section reveal">
+      <p class="eyebrow">Submission</p>
+      <h2>Built as a continuous website for Assignment 3.</h2>
+      <p>This redesign keeps the original canvas work visible while giving the site a clearer visual identity: Apple-like spacing, a silver 3D logo, and Oryzo-inspired scroll pacing.</p>
+      <div class="footer-links">
+        <a href="assignment3.html">Standalone Assignment 3</a>
+        <a href="archive-before-redesign/">View Previous Version</a>
+      </div>
+    </section>
   </main>
-  <!-- End of main content area -->
-  
+
+  <script src="logo-core.js"></script>
   <script src="script.js"></script>
-  <!-- This links our JavaScript file to the HTML page -->
-  <!-- The script tag is placed at the end of the body so the HTML loads first -->
-  <!-- src="script.js" tells the browser to load and run our JavaScript file -->
+  <script src="2d-static-composition.js"></script>
+  <script src="2d-interactive-field.js"></script>
+  <script src="3d-primitive-composition.js"></script>
+  <script src="3d-orbit-primitives.js"></script>
+  <script src="3d-atmospheric-geometry.js"></script>
 </body>
-<!-- End of body - all visible content goes above this line -->
+
 </html>
-<!-- End of HTML document -->
