@@ -29,6 +29,8 @@
     opening: document.querySelector("[data-opening-film]"),
     openingYear: document.querySelector("[data-opening-year]"),
     replayOpening: document.querySelector("[data-replay-opening]"),
+    hero: document.querySelector(".hero"),
+    routeMaps: Array.from(document.querySelectorAll(".route-map")),
     chart: d3.select("#rent-chart"),
     chartShell: document.querySelector(".chart-shell"),
     loading: document.querySelector("[data-chart-loading]"),
@@ -49,19 +51,97 @@
 
   let openingInterval;
   let openingTimeout;
+  let openingExitTimeout;
+  let routeResizeFrame;
+  let routeMapResizeObserver;
+
+  const ROUTE_VIEWBOX = { width: 1440, height: 900, edgePadding: 120 };
+  const ROUTE_PATHS = {
+    "map-route-manhattan": (left, right) =>
+      `M${left} 160H960L1010 110L1040 80L1080 120V220L1050 250V330L1020 360V430L990 460L950 500L910 460L950 420V340L980 310V230L1010 200L1050 240H${right}`,
+    "map-route-queens": (left, right) =>
+      `M${left} 320H1080L1120 280L1160 240H1360L1400 280V400L1360 440H1210L1200 450L1160 410V320L1200 360H${right}`,
+    "map-route-brooklyn": (left, right) =>
+      `M${left} 410H960L1000 450L1040 410H1160L1200 450H1340L1380 490L1340 530V630L1300 670H1080L1040 630V550L1000 510L1040 550H${right}`,
+    "map-route-bronx": (left, right) =>
+      `M${left} 80H960L1000 40H1130L1170 80V180L1130 220H1080V120L1040 80L1080 40H${right}`,
+    "map-route-staten-island": (left, right) =>
+      `M${left} 250H820V490L900 570L940 530H1040L1080 570V670L1040 710H940L900 670L940 630H${right}`
+  };
+
+  function syncRouteMapGeometry() {
+    const heroBounds = dom.hero?.getBoundingClientRect();
+    const referenceMap = dom.routeMaps.find((svg) => svg.classList.contains("hero-lines")) || dom.routeMaps[0];
+    const referenceBounds = referenceMap?.getBoundingClientRect();
+    const mapWidth = referenceBounds?.width;
+    const mapHeight = referenceBounds?.height;
+    if (!mapWidth || !mapHeight) return;
+
+    if (heroBounds?.height) {
+      document.documentElement.style.setProperty("--intro-hero-height", `${heroBounds.height}px`);
+    }
+
+    const viewportRatio = mapWidth / mapHeight;
+    const baseRatio = ROUTE_VIEWBOX.width / ROUTE_VIEWBOX.height;
+    let viewX = 0;
+    let viewY = 0;
+    let viewWidth = ROUTE_VIEWBOX.width;
+    let viewHeight = ROUTE_VIEWBOX.height;
+
+    if (viewportRatio > baseRatio) {
+      viewWidth = ROUTE_VIEWBOX.height * viewportRatio;
+      viewX = (ROUTE_VIEWBOX.width - viewWidth) / 2;
+    } else {
+      viewHeight = ROUTE_VIEWBOX.width / viewportRatio;
+      viewY = (ROUTE_VIEWBOX.height - viewHeight) / 2;
+    }
+
+    const round = (value) => Number(value.toFixed(2));
+    viewX = round(viewX);
+    viewY = round(viewY);
+    viewWidth = round(viewWidth);
+    viewHeight = round(viewHeight);
+    const leftEdge = round(viewX - ROUTE_VIEWBOX.edgePadding);
+    const rightEdge = round(viewX + viewWidth + ROUTE_VIEWBOX.edgePadding);
+    const sharedViewBox = `${viewX} ${viewY} ${viewWidth} ${viewHeight}`;
+
+    dom.routeMaps.forEach((svg) => {
+      svg.setAttribute("viewBox", sharedViewBox);
+      Object.entries(ROUTE_PATHS).forEach(([className, buildPath]) => {
+        svg.querySelectorAll(`.${className}`).forEach((path) => {
+          path.setAttribute("d", buildPath(leftEdge, rightEdge));
+        });
+      });
+    });
+  }
+
+  function scheduleRouteMapSync() {
+    window.cancelAnimationFrame(routeResizeFrame);
+    routeResizeFrame = window.requestAnimationFrame(syncRouteMapGeometry);
+  }
 
   function runOpening() {
+    syncRouteMapGeometry();
+
     if (!dom.opening || reducedMotion) {
       dom.opening?.classList.add("is-finished");
+      document.body.classList.remove("film-active", "intro-pending");
+      document.body.classList.add("intro-complete");
       return;
     }
 
+    window.scrollTo({ top: 0, behavior: "auto" });
+
     window.clearInterval(openingInterval);
     window.clearTimeout(openingTimeout);
-    document.body.classList.add("film-active");
-    dom.opening.classList.remove("is-finished");
+    window.clearTimeout(openingExitTimeout);
+    document.body.classList.remove("intro-complete");
+    document.body.classList.add("film-active", "intro-pending");
+    dom.opening.classList.remove("is-finished", "is-transitioning");
     dom.opening.classList.add("is-replaying");
-    const animatedOpeningElements = dom.opening.querySelectorAll(".opening-route, .opening-copy");
+    const animatedOpeningElements = dom.opening.querySelectorAll(
+      ".opening-routes .map-outline, .opening-routes .map-route, .opening-routes .map-station, .opening-routes .map-transfer, .opening-copy"
+    );
     animatedOpeningElements.forEach((element) => { element.style.animation = "none"; });
     void dom.opening.offsetWidth;
     animatedOpeningElements.forEach((element) => { element.style.animation = ""; });
@@ -77,12 +157,23 @@
       if (year >= 2026) window.clearInterval(openingInterval);
     }, 165);
 
+    openingExitTimeout = window.setTimeout(() => {
+      dom.opening.classList.add("is-transitioning");
+    }, 2140);
+
     openingTimeout = window.setTimeout(() => {
       dom.opening.classList.add("is-finished");
-      dom.opening.classList.remove("is-replaying");
-      document.body.classList.remove("film-active");
+      dom.opening.classList.remove("is-replaying", "is-transitioning");
+      document.body.classList.remove("film-active", "intro-pending");
+      document.body.classList.add("intro-complete");
     }, 2600);
   }
+
+  if (dom.hero && "ResizeObserver" in window) {
+    routeMapResizeObserver = new ResizeObserver(scheduleRouteMapSync);
+    routeMapResizeObserver.observe(dom.hero);
+  }
+  window.addEventListener("resize", scheduleRouteMapSync, { passive: true });
 
   runOpening();
   dom.replayOpening?.addEventListener("click", runOpening);
@@ -299,9 +390,13 @@
         .attr("x", width - margin.right)
         .attr("y", rentTop - 18)
         .attr("text-anchor", "end")
+        .attr("display", compact ? "none" : null)
         .text(state.sceneLabel);
 
       const vacancyLayer = dom.chart.append("g").attr("class", "vacancy-layer");
+      const vacancyLabelX = (d) => compact
+        ? Math.max(margin.left + 44, Math.min(width - margin.right - 44, x(d.date)))
+        : x(d.date);
       const vacancy = vacancyLayer.selectAll("g")
         .data(vacancyRates)
         .join("g")
@@ -321,15 +416,15 @@
         .attr("r", 8);
       vacancy.append("rect")
         .attr("class", "vacancy-label-bg")
-        .attr("x", (d) => x(d.date) - 27)
-        .attr("y", (d, index) => rentTop + 27 + (compact ? (index % 2) * 23 : 0))
-        .attr("width", 54)
-        .attr("height", 19)
-        .attr("rx", 9.5);
+        .attr("x", (d) => vacancyLabelX(d) - 34)
+        .attr("y", (d, index) => rentTop + 27 + (compact ? (index % 2) * 26 : 0))
+        .attr("width", 68)
+        .attr("height", 22)
+        .attr("rx", 11);
       vacancy.append("text")
         .attr("class", "vacancy-label")
-        .attr("x", (d) => x(d.date))
-        .attr("y", (d, index) => rentTop + 40 + (compact ? (index % 2) * 23 : 0))
+        .attr("x", vacancyLabelX)
+        .attr("y", (d, index) => rentTop + 42 + (compact ? (index % 2) * 26 : 0))
         .attr("text-anchor", "middle")
         .text((d) => `${d.year} ${d.vacancyRate.toFixed(2)}%`);
 
@@ -434,6 +529,7 @@
         .attr("class", "route-path endpoint-name")
         .attr("data-route", (d) => d.borough)
         .attr("fill", (d) => COLORS[d.borough])
+        .attr("display", compact ? "none" : null)
         .text((d) => BADGES[d.borough]);
 
       const overlay = dom.chart.append("rect")
@@ -478,6 +574,7 @@
         yRent,
         yInventory,
         rentTop,
+        rentBottom,
         inventoryBottom,
         progressRect,
         sceneLabel,
@@ -507,6 +604,23 @@
       const xPosition = chartRefs.x(months[state.index]);
       const labelOnLeft = state.index > months.length * 0.78;
       const transition = d3.transition().duration(duration).ease(d3.easeCubicOut);
+      const endpointPositions = allSeries
+        .map((series) => ({
+          borough: series.borough,
+          y: chartRefs.yRent(series.values[state.index].medianAskingRent) - 9
+        }))
+        .sort((a, b) => a.y - b.y);
+      const endpointGap = 18;
+      const endpointTop = chartRefs.rentTop + 10;
+      const endpointBottom = chartRefs.rentBottom - 6;
+      endpointPositions.forEach((point, index) => {
+        point.adjustedY = Math.max(point.y, index === 0 ? endpointTop : endpointPositions[index - 1].adjustedY + endpointGap);
+      });
+      const endpointOverflow = endpointPositions.at(-1).adjustedY - endpointBottom;
+      if (endpointOverflow > 0) {
+        endpointPositions.forEach((point) => { point.adjustedY -= endpointOverflow; });
+      }
+      const endpointY = new Map(endpointPositions.map((point) => [point.borough, point.adjustedY]));
 
       chartRefs.progressRect
         .interrupt()
@@ -528,7 +642,7 @@
         .interrupt()
         .transition(transition)
         .attr("x", xPosition + (labelOnLeft ? -10 : 10))
-        .attr("y", (d) => chartRefs.yRent(d.values[state.index].medianAskingRent) - 9)
+        .attr("y", (d) => endpointY.get(d.borough))
         .attr("text-anchor", labelOnLeft ? "end" : "start");
       chartRefs.stations
         .classed("is-future", (d) => d.index > state.index)

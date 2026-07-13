@@ -73,14 +73,13 @@ input:focus-visible {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  display: grid;
+  display: block;
   overflow: hidden;
-  place-items: center;
   background: var(--black);
   color: #ffffff;
   opacity: 1;
   visibility: visible;
-  transition: opacity 520ms ease, visibility 0s linear 520ms;
+  transition: none;
 }
 
 .opening-film.is-finished {
@@ -92,7 +91,30 @@ input:focus-visible {
 .opening-film.is-replaying {
   opacity: 1;
   visibility: visible;
-  transition-delay: 0s;
+}
+
+.opening-film.is-transitioning .opening-year {
+  opacity: 0;
+  transform: translateY(-18px) rotateX(36deg);
+}
+
+.opening-film.is-transitioning .opening-copy {
+  opacity: 1;
+  transform: translateY(0);
+  animation: none;
+}
+
+.opening-film.is-transitioning .opening-routes .map-route,
+.opening-film.is-transitioning .opening-routes .map-outline {
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+.opening-film.is-transitioning .opening-routes .map-station,
+.opening-film.is-transitioning .opening-routes .map-transfer {
+  opacity: 1;
+  transform: scale(1);
+  animation: none;
 }
 
 .opening-grid,
@@ -107,6 +129,12 @@ input:focus-visible {
   mask-image: linear-gradient(to bottom, black, transparent 94%);
 }
 
+.opening-grid {
+  top: var(--header-height);
+  bottom: auto;
+  height: var(--intro-hero-height, calc(100svh - var(--header-height)));
+}
+
 .opening-grid::after,
 .hero-grid::after {
   position: absolute;
@@ -117,56 +145,157 @@ input:focus-visible {
   opacity: 0.28;
 }
 
+.opening-routes,
+.hero-lines {
+  position: absolute;
+  right: 0;
+  display: block;
+  width: 100vw;
+  overflow: visible;
+  fill: none;
+  pointer-events: none;
+}
+
 .opening-routes {
-  position: absolute;
-  inset: 0;
+  top: var(--header-height);
+  height: var(--intro-hero-height, calc(100svh - var(--header-height)));
+  opacity: 0.9;
 }
 
-.opening-route {
-  position: absolute;
-  left: -8vw;
-  width: 116vw;
-  height: clamp(8px, 1vw, 15px);
-  border: 2px solid var(--black);
-  border-radius: 999px;
-  transform: translate3d(-112%, 0, 0);
-  animation: opening-route-arrival 1150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.route-map path,
+.route-map circle {
+  vector-effect: non-scaling-stroke;
 }
 
-.route-manhattan {
-  top: 25%;
-  background: var(--manhattan);
-  animation-delay: 80ms;
+.map-outline {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 3 12;
 }
 
-.route-queens {
-  top: 35%;
-  background: var(--queens);
-  animation-delay: 170ms;
+.map-route,
+.map-flow {
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.route-brooklyn {
-  top: 45%;
-  background: var(--brooklyn);
+.map-route {
+  stroke-width: 11;
+}
+
+.map-route-manhattan {
+  stroke: var(--manhattan);
+}
+
+.map-route-queens {
+  stroke: var(--queens);
+}
+
+.map-route-brooklyn {
+  stroke: var(--brooklyn);
+}
+
+.map-route-bronx {
+  stroke: var(--bronx);
+}
+
+.map-route-staten-island {
+  stroke: var(--staten-island);
+}
+
+.map-station,
+.map-transfer {
+  stroke: #f5f5f5;
+  stroke-width: 5;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.station-manhattan {
+  fill: var(--manhattan);
+}
+
+.station-queens {
+  fill: var(--queens);
+}
+
+.station-brooklyn {
+  fill: var(--brooklyn);
+}
+
+.station-bronx {
+  fill: var(--bronx);
+}
+
+.station-staten-island {
+  fill: var(--staten-island);
+}
+
+.map-transfer {
+  fill: var(--black);
+  stroke-width: 6;
+}
+
+.opening-routes .map-outline,
+.opening-routes .map-route {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: opening-route-draw 1250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.opening-routes .map-outline {
+  animation-delay: 200ms;
+  animation-duration: 1700ms;
+}
+
+.opening-routes .map-route-manhattan {
+  animation-delay: 60ms;
+}
+
+.opening-routes .map-route-queens {
   animation-delay: 260ms;
 }
 
-.route-bronx {
-  top: 55%;
-  background: var(--bronx);
-  animation-delay: 350ms;
+.opening-routes .map-route-brooklyn {
+  animation-delay: 460ms;
 }
 
-.route-staten-island {
-  top: 65%;
-  background: var(--staten-island);
-  animation-delay: 440ms;
+.opening-routes .map-route-bronx {
+  animation-delay: 660ms;
+}
+
+.opening-routes .map-route-staten-island {
+  animation-delay: 860ms;
+}
+
+.opening-routes .map-station,
+.opening-routes .map-transfer {
+  opacity: 0;
+  transform: scale(0.2);
+  animation: opening-station-arrival 340ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1460ms;
+}
+
+.opening-routes .station-queens,
+.opening-routes .station-brooklyn {
+  animation-delay: 1580ms;
+}
+
+.opening-routes .station-bronx,
+.opening-routes .station-staten-island,
+.opening-routes .map-transfer {
+  animation-delay: 1740ms;
 }
 
 .opening-copy {
   position: relative;
   z-index: 2;
-  width: min(960px, calc(100% - 48px));
+  width: min(1260px, calc(100% - 48px));
+  min-height: calc(100svh - var(--header-height));
+  margin: var(--header-height) auto 0;
+  padding: clamp(88px, 10vw, 148px) 0 clamp(110px, 13vw, 180px);
   opacity: 0;
   transform: translateY(36px);
   animation: opening-copy-arrival 720ms 1050ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -176,29 +305,30 @@ input:focus-visible {
   margin: 0 0 18px;
   font-family: var(--mono);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .opening-copy h1 {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0;
-  font-size: clamp(68px, 12vw, 176px);
+  font-size: clamp(82px, 14.4vw, 214px);
   font-weight: 900;
-  letter-spacing: -0.075em;
-  line-height: 0.77;
+  letter-spacing: -0.085em;
+  line-height: 0.75;
 }
 
 .opening-year {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: clamp(46px, 7vw, 96px);
   color: rgba(255, 255, 255, 0.3);
   font-family: var(--mono);
   font-size: clamp(40px, 7vw, 94px);
   font-weight: 800;
   letter-spacing: -0.06em;
+  transition: opacity 260ms ease, transform 320ms ease;
 }
 
 .opening-year.is-flipping {
@@ -216,15 +346,16 @@ input:focus-visible {
   }
 }
 
-@keyframes opening-route-arrival {
-  0% {
-    transform: translate3d(-112%, 0, 0);
+@keyframes opening-route-draw {
+  to {
+    stroke-dashoffset: 0;
   }
-  72% {
-    transform: translate3d(2%, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
+}
+
+@keyframes opening-station-arrival {
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -249,6 +380,7 @@ input:focus-visible {
   background: rgba(5, 5, 5, 0.92);
   color: #ffffff;
   backdrop-filter: blur(20px);
+  transition: opacity 420ms ease;
 }
 
 .site-mark {
@@ -309,7 +441,13 @@ input:focus-visible {
     0 0 0 70px rgba(255, 255, 255, 0.018),
     0 0 0 140px rgba(255, 255, 255, 0.012);
   content: "";
+  opacity: 1;
   pointer-events: none;
+  transition: opacity 620ms ease 120ms;
+}
+
+body.intro-pending .hero::before {
+  opacity: 0;
 }
 
 .hero-inner {
@@ -323,7 +461,7 @@ input:focus-visible {
 .eyebrow {
   margin: 0 0 18px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -339,7 +477,7 @@ input:focus-visible {
 }
 
 .hero-deck {
-  max-width: 660px;
+  max-width: 620px;
   margin: 36px 0 28px;
   color: rgba(255, 255, 255, 0.72);
   font-size: clamp(18px, 2vw, 27px);
@@ -396,12 +534,12 @@ input:focus-visible {
 .transfer-disc {
   background: #ffffff;
   color: #111111;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .hero-meta {
   display: grid;
-  max-width: 840px;
+  max-width: 720px;
   margin-top: 40px;
   border-top: 1px solid rgba(255, 255, 255, 0.28);
   border-bottom: 1px solid rgba(255, 255, 255, 0.28);
@@ -424,7 +562,7 @@ input:focus-visible {
 .board-clock span {
   color: rgba(255, 255, 255, 0.54);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.12em;
 }
@@ -441,6 +579,50 @@ input:focus-visible {
   margin-top: 28px;
 }
 
+.hero-deck,
+.hero-routes,
+.hero-meta,
+.hero-actions,
+.hero-scroll {
+  transition: opacity 480ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.intro-pending .site-header,
+body.intro-pending .hero-deck,
+body.intro-pending .hero-routes,
+body.intro-pending .hero-meta,
+body.intro-pending .hero-actions,
+body.intro-pending .hero-scroll {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.intro-pending .hero-deck,
+body.intro-pending .hero-routes,
+body.intro-pending .hero-meta,
+body.intro-pending .hero-actions,
+body.intro-pending .hero-scroll {
+  transform: translateY(18px);
+}
+
+body.intro-complete .site-header,
+body.intro-complete .hero-deck {
+  transition-delay: 100ms;
+}
+
+body.intro-complete .hero-routes {
+  transition-delay: 160ms;
+}
+
+body.intro-complete .hero-meta {
+  transition-delay: 220ms;
+}
+
+body.intro-complete .hero-actions,
+body.intro-complete .hero-scroll {
+  transition-delay: 280ms;
+}
+
 .button,
 .control-button,
 .board-tab {
@@ -452,7 +634,7 @@ input:focus-visible {
   border: 1px solid currentColor;
   border-radius: 999px;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.09em;
   text-decoration: none;
@@ -486,7 +668,7 @@ input:focus-visible {
   gap: 12px;
   color: rgba(255, 255, 255, 0.5);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -520,64 +702,72 @@ input:focus-visible {
 }
 
 .hero-lines {
-  position: absolute;
-  inset: 0;
+  top: 0;
+  height: 100%;
   z-index: 1;
-  pointer-events: none;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
-.hero-line {
-  position: absolute;
-  right: -12vw;
-  width: 50vw;
-  height: 11px;
-  border: 2px solid var(--black);
-  border-radius: 999px;
-  transform-origin: right center;
+.map-route-flows {
+  opacity: 0;
+  transition: opacity 800ms ease 260ms;
 }
 
-.hero-line::after {
-  position: absolute;
-  top: 50%;
-  left: 13%;
-  width: 22px;
-  height: 22px;
-  border: 5px solid #ffffff;
-  border-radius: 50%;
-  background: inherit;
-  content: "";
-  transform: translateY(-50%);
+body.intro-complete .hero-lines .map-route-flows {
+  opacity: 0.72;
 }
 
-.hero-line-red {
-  top: 18%;
-  background: var(--manhattan);
-  transform: rotate(-24deg);
+.map-flow {
+  stroke: rgba(255, 255, 255, 0.82);
+  stroke-width: 3;
+  stroke-dasharray: 2 98;
+  stroke-dashoffset: 0;
+  animation: map-route-flow 6200ms linear infinite;
+  animation-play-state: paused;
 }
 
-.hero-line-orange {
-  top: 33%;
-  background: var(--queens);
-  transform: rotate(-13deg);
+body.intro-complete .hero-lines .map-flow {
+  animation-play-state: running;
 }
 
-.hero-line-yellow {
-  top: 48%;
-  background: var(--brooklyn);
-  transform: rotate(-2deg);
+.map-flow.map-route-queens {
+  animation-delay: -900ms;
 }
 
-.hero-line-green {
-  top: 63%;
-  background: var(--bronx);
-  transform: rotate(10deg);
+.map-flow.map-route-brooklyn {
+  animation-delay: -1800ms;
 }
 
-.hero-line-blue {
-  top: 78%;
-  background: var(--staten-island);
-  transform: rotate(21deg);
+.map-flow.map-route-bronx {
+  animation-delay: -2700ms;
+}
+
+.map-flow.map-route-staten-island {
+  animation-delay: -3600ms;
+}
+
+.hero-lines .map-transfer {
+  animation: none;
+}
+
+body.intro-complete .hero-lines .map-transfer {
+  animation: map-transfer-pulse 2800ms ease-in-out infinite;
+}
+
+@keyframes map-route-flow {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes map-transfer-pulse {
+  0%,
+  100% {
+    stroke-width: 6;
+  }
+  50% {
+    stroke-width: 9;
+  }
 }
 
 .section-pad {
@@ -714,7 +904,7 @@ input:focus-visible {
   border-radius: 999px;
   background: transparent;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   cursor: pointer;
   opacity: 0.5;
@@ -725,7 +915,7 @@ input:focus-visible {
   width: 27px;
   height: 27px;
   border-width: 1px;
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .route-toggle.is-active {
@@ -763,7 +953,7 @@ input:focus-visible {
   background: #090909;
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: opacity 260ms ease, visibility 260ms ease;
@@ -799,7 +989,7 @@ input:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.42);
   background: rgba(5, 5, 5, 0.94);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.45;
   pointer-events: none;
   opacity: 0;
@@ -817,7 +1007,7 @@ input:focus-visible {
   margin-bottom: 9px;
   color: rgba(255, 255, 255, 0.68);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -839,7 +1029,7 @@ input:focus-visible {
 
 .chart-tooltip > span b {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   white-space: nowrap;
 }
 
@@ -848,7 +1038,7 @@ input:focus-visible {
   margin-bottom: 9px;
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
 }
@@ -1016,7 +1206,7 @@ input:focus-visible {
 
 .stop-label {
   margin: 26px 0 10px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.1em;
 }
 
@@ -1144,7 +1334,7 @@ input:focus-visible {
   padding: 44px 0;
   color: rgba(255, 255, 255, 0.44);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1194,9 +1384,9 @@ input:focus-visible {
 .board-identity small {
   display: block;
   margin-top: 3px;
-  color: rgba(255, 255, 255, 0.46);
+  color: rgba(255, 255, 255, 0.66);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 0.08em;
 }
 
@@ -1212,9 +1402,9 @@ input:focus-visible {
   display: block;
   margin-bottom: 8px;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.44);
+  color: rgba(255, 255, 255, 0.64);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-overflow: ellipsis;
@@ -1232,14 +1422,16 @@ input:focus-visible {
 
 .board-metric {
   min-width: 0;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .board-metric span {
   display: block;
   margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.64);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1284,7 +1476,7 @@ input:focus-visible {
   max-width: 900px;
   margin: 22px 0 0;
   color: rgba(255, 255, 255, 0.45);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -1296,11 +1488,13 @@ input:focus-visible {
   display: grid;
   border-top: 2px solid var(--ink);
   border-bottom: 2px solid var(--ink);
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .finding-grid article {
+  min-width: 0;
   min-height: 370px;
+  overflow: hidden;
   padding: 34px;
   border-right: 2px solid var(--ink);
 }
@@ -1310,12 +1504,22 @@ input:focus-visible {
 }
 
 .finding-number {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   margin-bottom: 64px;
   font-family: var(--mono);
-  font-size: clamp(42px, 5.7vw, 82px);
+  font-size: clamp(40px, 4.8vw, 72px);
   font-weight: 900;
-  letter-spacing: -0.08em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.finding-unit {
+  font-size: 0.7em;
+  letter-spacing: 0;
 }
 
 .finding-route {
@@ -1324,7 +1528,7 @@ input:focus-visible {
   gap: 9px;
   margin: 0 0 20px;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1335,7 +1539,7 @@ input:focus-visible {
   width: 30px;
   height: 30px;
   border-color: var(--ink);
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .finding-grid h3 {
@@ -1376,7 +1580,7 @@ input:focus-visible {
 
 .method-list span {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
@@ -1391,45 +1595,11 @@ input:focus-visible {
   font-weight: 800;
 }
 
-.reflection {
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.reflection blockquote {
-  max-width: 1260px;
-  margin: 0;
-  font-size: clamp(37px, 5.2vw, 76px);
-  font-weight: 900;
-  letter-spacing: -0.055em;
-  line-height: 1.02;
-}
-
-.reflection-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  margin-top: 72px;
-  padding-top: 20px;
-  border-top: 2px solid var(--ink);
-  font-family: var(--mono);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.reflection-footer a {
-  text-decoration: none;
-}
-
 /* D3 chart */
 .chart-axis text {
   fill: rgba(255, 255, 255, 0.54);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .chart-axis path,
@@ -1449,7 +1619,7 @@ input:focus-visible {
 .panel-title {
   fill: rgba(255, 255, 255, 0.92);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
@@ -1457,13 +1627,13 @@ input:focus-visible {
 .panel-note {
   fill: rgba(255, 255, 255, 0.42);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .scene-label {
   fill: rgba(255, 255, 255, 0.72);
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.06em;
 }
@@ -1522,7 +1692,7 @@ input:focus-visible {
 .station-label {
   fill: rgba(255, 255, 255, 0.5);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 }
 
@@ -1544,7 +1714,7 @@ input:focus-visible {
 .vacancy-label {
   fill: #090909;
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.04em;
 }
@@ -1600,7 +1770,7 @@ input:focus-visible {
 
 .endpoint-name {
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
 }
 
@@ -1611,7 +1781,7 @@ input:focus-visible {
 .scene-tag {
   fill: #090909;
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.05em;
 }
@@ -1645,6 +1815,27 @@ input:focus-visible {
   }
 }
 
+@media (max-width: 1020px) {
+  .finding-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .finding-grid article,
+  .finding-grid article:last-child {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .finding-grid article:last-child {
+    border-bottom: 0;
+  }
+
+  .finding-number {
+    margin-bottom: 38px;
+  }
+}
+
 @media (max-width: 860px) {
   :root {
     --header-height: 62px;
@@ -1659,20 +1850,36 @@ input:focus-visible {
   }
 
   .site-header nav a {
-    font-size: 10px;
+    font-size: 11px;
   }
 
+  .opening-copy,
   .hero-inner {
     width: calc(100% - 36px);
   }
 
+  .opening-copy h1,
   .hero h1 {
     font-size: clamp(70px, 20vw, 132px);
   }
 
-  .hero-line {
-    right: -34vw;
-    width: 76vw;
+  .opening-routes,
+  .hero-lines {
+    right: calc((100vw - 600px) * 0.1);
+    width: max(600px, 100vw);
+    height: 320px;
+  }
+
+  .opening-routes {
+    top: calc(var(--header-height) + 24px);
+  }
+
+  .hero-lines {
+    top: 24px;
+  }
+
+  .map-route {
+    stroke-width: 9;
   }
 
   .hero-meta {
@@ -1730,25 +1937,6 @@ input:focus-visible {
     max-width: 720px;
   }
 
-  .finding-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .finding-grid article,
-  .finding-grid article:last-child {
-    min-height: 0;
-    border-right: 0;
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .finding-grid article:last-child {
-    border-bottom: 0;
-  }
-
-  .finding-number {
-    margin-bottom: 38px;
-  }
-
   .method-list article {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -1769,16 +1957,13 @@ input:focus-visible {
   }
 
   .opening-copy {
-    width: calc(100% - 32px);
-  }
-
-  .opening-copy h1 {
-    font-size: 21vw;
+    width: calc(100% - 36px);
   }
 
   .opening-year {
-    position: static;
-    margin-top: 30px;
+    right: 0;
+    bottom: 42px;
+    font-size: 44px;
   }
 
   .section-pad,
@@ -1835,6 +2020,7 @@ input:focus-visible {
 
   .board-toolbar {
     align-items: flex-end;
+    flex-wrap: wrap;
   }
 
   .board-tabs {
@@ -1842,17 +2028,31 @@ input:focus-visible {
   }
 
   .board-tab {
-    min-height: 34px;
+    min-height: 38px;
     padding: 0 12px;
-    font-size: 8px;
+    font-size: 11px;
+  }
+
+  .board-clock {
+    width: 100%;
+    text-align: left;
   }
 
   .board-clock strong {
     font-size: 15px;
   }
 
-  .reflection-footer {
-    flex-direction: column;
+  .chart-tooltip {
+    max-width: calc(100% - 16px);
+  }
+
+  .tooltip-row {
+    grid-template-columns: 9px minmax(0, 1fr);
+  }
+
+  .tooltip-value {
+    grid-column: 2;
+    white-space: normal;
   }
 }
 
