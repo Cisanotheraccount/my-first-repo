@@ -961,6 +961,10 @@ p {
     gap: 10px;
   }
 
+  .site-header .site-mark {
+    display: none;
+  }
+
   .site-header nav a {
     font-size: 12px;
   }

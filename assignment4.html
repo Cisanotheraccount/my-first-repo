@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NYC Rent Lines — a D3.js temporal study of asking rents and rental inventory across New York City's five boroughs, July 2016 to June 2026.">
+  <title>NYC Rent Lines — Assignment 4</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="assignment4.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+
+<body>
+  <div class="opening-film" data-opening-film aria-hidden="true">
+    <div class="opening-grid"></div>
+    <div class="opening-routes">
+      <span class="opening-route route-manhattan"></span>
+      <span class="opening-route route-queens"></span>
+      <span class="opening-route route-brooklyn"></span>
+      <span class="opening-route route-bronx"></span>
+      <span class="opening-route route-staten-island"></span>
+    </div>
+    <div class="opening-copy">
+      <p>Assignment 4 / Temporal Structures</p>
+      <h1>NYC<br>RENT LINES</h1>
+      <div class="opening-year" data-opening-year>2016</div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="site-mark" href="index.html">CI SONG / CDW</a>
+    <nav aria-label="Assignment navigation">
+      <a href="#timeline">Timeline</a>
+      <a href="#board">Data Board</a>
+      <a href="#methodology">Methodology</a>
+      <a href="index.html">Course Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-lines" aria-hidden="true">
+        <span class="hero-line hero-line-red"></span>
+        <span class="hero-line hero-line-orange"></span>
+        <span class="hero-line hero-line-yellow"></span>
+        <span class="hero-line hero-line-green"></span>
+        <span class="hero-line hero-line-blue"></span>
+      </div>
+
+      <div class="hero-inner">
+        <p class="kicker">Assignment 4 / Temporal Structures / D3.js</p>
+        <h1>NYC<br>RENT LINES</h1>
+        <p class="hero-deck">A decade of asking rents and rental supply, read as five subway lines moving through one shared city.</p>
+
+        <div class="hero-routes" aria-label="Five New York City boroughs">
+          <span class="route-disc disc-manhattan" aria-label="Manhattan">M</span>
+          <span class="route-disc disc-queens" aria-label="Queens">Q</span>
+          <span class="route-disc disc-brooklyn" aria-label="Brooklyn">BK</span>
+          <span class="route-disc disc-bronx" aria-label="Bronx">BX</span>
+          <span class="route-disc disc-staten-island" aria-label="Staten Island">SI</span>
+        </div>
+
+        <div class="hero-meta">
+          <div>
+            <span>ORIGIN</span>
+            <strong>JUL 2016</strong>
+          </div>
+          <div>
+            <span>TERMINUS</span>
+            <strong>JUN 2026</strong>
+          </div>
+          <div>
+            <span>OBSERVATIONS</span>
+            <strong>600</strong>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a class="button button-light" href="#timeline">Enter the timeline</a>
+          <button class="button button-ghost" type="button" data-replay-opening>Replay opening</button>
+        </div>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true">
+        <span></span>
+        Scroll to depart
+      </div>
+    </section>
+
+    <section class="intro section-pad">
+      <div class="intro-index">01</div>
+      <div>
+        <p class="eyebrow">Research question</p>
+        <h2>Where did asking rents rise fastest—and how much choice remained on the market?</h2>
+      </div>
+      <p class="intro-copy">Each month becomes a position on a transit line. The upper track compares asking rents in nominal dollars; the lower track indexes rental inventory to July 2016 so every borough's supply shock remains visible.</p>
+    </section>
+
+    <section class="timeline-experience" id="timeline">
+      <div class="timeline-layout">
+        <div class="timeline-sticky">
+          <div class="timeline-header">
+            <div>
+              <p class="eyebrow">The main line / 120 months</p>
+              <h2>Asking rent and rental inventory</h2>
+              <p class="chart-subtitle">Monthly asking rent in nominal dollars; inventory indexed to July 2016 = 100. Exact listing counts appear in the data board and tooltip.</p>
+            </div>
+            <div class="date-board" aria-live="polite">
+              <span>NOW APPROACHING</span>
+              <strong data-current-date>JUN 2026</strong>
+            </div>
+          </div>
+
+          <div class="route-filter" role="group" aria-label="Toggle borough routes">
+            <button class="route-toggle is-active" type="button" data-borough="Manhattan" aria-pressed="true">
+              <span class="route-disc disc-manhattan">M</span><span>Manhattan</span>
+            </button>
+            <button class="route-toggle is-active" type="button" data-borough="Queens" aria-pressed="true">
+              <span class="route-disc disc-queens">Q</span><span>Queens</span>
+            </button>
+            <button class="route-toggle is-active" type="button" data-borough="Brooklyn" aria-pressed="true">
+              <span class="route-disc disc-brooklyn">BK</span><span>Brooklyn</span>
+            </button>
+            <button class="route-toggle is-active" type="button" data-borough="Bronx" aria-pressed="true">
+              <span class="route-disc disc-bronx">BX</span><span>Bronx</span>
+            </button>
+            <button class="route-toggle is-active" type="button" data-borough="Staten Island" aria-pressed="true">
+              <span class="route-disc disc-staten-island">SI</span><span>Staten Island</span>
+            </button>
+          </div>
+
+          <div class="chart-shell">
+            <div class="chart-loading" data-chart-loading>
+              <span></span>
+              Loading the lines…
+            </div>
+            <svg id="rent-chart" role="img" aria-labelledby="chart-title chart-description"></svg>
+            <div class="chart-tooltip" data-chart-tooltip role="status" aria-hidden="true"></div>
+          </div>
+
+          <div class="timeline-controls">
+            <button class="control-button" type="button" data-play-button aria-label="Play timeline">
+              <span data-play-icon>▶</span>
+              <span data-play-label>Play decade</span>
+            </button>
+            <label class="scrubber-label" for="time-scrubber">Timeline position</label>
+            <input id="time-scrubber" class="time-scrubber" type="range" min="0" max="119" value="119" step="1">
+            <button class="control-button control-button-small" type="button" data-replay-chart>Replay draw</button>
+          </div>
+
+          <p class="chart-error" data-chart-error hidden></p>
+        </div>
+
+        <div class="story-stops" aria-label="Key moments in the decade">
+          <article class="story-stop is-active" id="baseline" data-story-date="2016-07" data-focus="all">
+            <span class="stop-number">01</span>
+            <p class="stop-label">JUL 2016 / BASELINE</p>
+            <h3>Five routes depart from very different price points.</h3>
+            <p>Manhattan begins at $3,400. The Bronx begins at exactly half that amount, while Brooklyn, Queens, and Staten Island form the middle of the system.</p>
+          </article>
+
+          <article class="story-stop" id="inventory-shock" data-story-date="2020-09" data-focus="Manhattan,Brooklyn">
+            <span class="stop-number">02</span>
+            <p class="stop-label">2020 / INVENTORY SHOCK</p>
+            <h3>The pandemic sends available listings sharply upward.</h3>
+            <p>Manhattan inventory peaks above 40,000 listings in August 2020. Brooklyn reaches its own decade high one month later.</p>
+          </article>
+
+          <article class="story-stop" id="rent-trough" data-story-date="2021-01" data-focus="Manhattan,Brooklyn,Queens">
+            <span class="stop-number">03</span>
+            <p class="stop-label">2021 / RENT TROUGH</p>
+            <h3>More choice briefly pushes the central lines downward.</h3>
+            <p>Manhattan falls to $2,750 in January 2021. Queens reaches $2,000 in the same month; Brooklyn bottoms shortly afterward.</p>
+          </article>
+
+          <article class="story-stop" id="rebound" data-story-date="2022-06" data-focus="all">
+            <span class="stop-number">04</span>
+            <p class="stop-label">2022 / RAPID REBOUND</p>
+            <h3>The discount era closes almost as quickly as it opened.</h3>
+            <p>As inventory contracts, asking rents accelerate past their pre-pandemic levels across Manhattan, Brooklyn, and Queens.</p>
+          </article>
+
+          <article class="story-stop" id="vacancy-low" data-story-date="2023-06" data-focus="all">
+            <span class="stop-number">05</span>
+            <p class="stop-label">2023 / 1.41% VACANCY</p>
+            <h3>The official vacancy survey marks an exceptionally tight city.</h3>
+            <p>NYC's net rental vacancy rate drops from 4.54% in 2021 to 1.41% in 2023, one of the lowest readings since the survey began.</p>
+          </article>
+
+          <article class="story-stop" id="terminus" data-story-date="2026-06" data-focus="all">
+            <span class="stop-number">06</span>
+            <p class="stop-label">JUN 2026 / NEW TERMINUS</p>
+            <h3>Every borough arrives higher than where it started.</h3>
+            <p>The Bronx records the largest nominal increase at 76.2%. Manhattan remains the most expensive line at $4,965.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="board-section" id="board">
+      <div class="section-pad board-pad">
+        <div class="section-heading section-heading-light">
+          <div class="intro-index">02</div>
+          <div>
+            <p class="eyebrow">Live departure board</p>
+            <h2>Five boroughs. One moving ranking.</h2>
+          </div>
+          <p>Change the ranking mode or move through time. Rows switch tracks, bars resize, numbers roll, and each miniature line redraws to the selected month.</p>
+        </div>
+
+        <div class="board-toolbar">
+          <div class="board-tabs" role="group" aria-label="Ranking metric">
+            <button class="board-tab is-active" type="button" data-board-metric="rent" aria-pressed="true">Rent</button>
+            <button class="board-tab" type="button" data-board-metric="inventory" aria-pressed="false">Inventory</button>
+            <button class="board-tab" type="button" data-board-metric="change" aria-pressed="false">10Y change</button>
+          </div>
+          <div class="board-clock">
+            <span>DATA AT</span>
+            <strong data-board-date>JUN 2026</strong>
+          </div>
+        </div>
+
+        <div class="board-scroll" aria-label="Animated borough rankings">
+          <div class="ranking-board" id="ranking-board" role="table" aria-label="Borough rent and inventory ranking">
+            <div class="board-empty">Preparing the departure board…</div>
+          </div>
+        </div>
+
+        <p class="board-note">Income needed uses the common 30% housing-cost standard: monthly asking rent × 40. It is a comparison aid, not an observed income or leasing requirement.</p>
+      </div>
+    </section>
+
+    <section class="findings section-pad">
+      <div class="section-heading">
+        <div class="intro-index">03</div>
+        <div>
+          <p class="eyebrow">What the line reveals</p>
+          <h2>The decade did not move evenly.</h2>
+        </div>
+      </div>
+
+      <div class="finding-grid">
+        <article>
+          <span class="finding-number">+76.2%</span>
+          <p class="finding-route"><span class="route-disc disc-bronx">BX</span> Bronx</p>
+          <h3>Fastest nominal rise</h3>
+          <p>Asking rent moves from $1,700 to $2,995—the largest percentage increase among the five boroughs.</p>
+        </article>
+        <article>
+          <span class="finding-number">40,359</span>
+          <p class="finding-route"><span class="route-disc disc-manhattan">M</span> Manhattan</p>
+          <h3>Peak inventory shock</h3>
+          <p>Available rental listings reach a decade high in August 2020 before falling sharply during the rebound.</p>
+        </article>
+        <article>
+          <span class="finding-number">1.41%</span>
+          <p class="finding-route"><span class="transfer-disc">HVS</span> Citywide</p>
+          <h3>Historic tightness</h3>
+          <p>The 2023 Housing and Vacancy Survey records one of the lowest net rental vacancy rates since 1965.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="methodology" id="methodology">
+      <div class="section-pad methodology-grid">
+        <div>
+          <p class="eyebrow">Methodology / Sources</p>
+          <h2>What these lines measure—and what they do not.</h2>
+        </div>
+        <div class="method-list">
+          <article>
+            <span>01 / MARKET DATA</span>
+            <p>Monthly median asking rent and rental inventory come from the <a href="https://streeteasy.com/blog/data-dashboard/" target="_blank" rel="noreferrer">StreetEasy Data Dashboard</a> master download. Asking rent is the exact middle asking rent among listings available on StreetEasy at any point in the month. Inventory is the number of listings available at any point in that month.</p>
+          </article>
+          <article>
+            <span>02 / OFFICIAL CHECKPOINTS</span>
+            <p>Net rental vacancy rates come from the NYC Department of Housing Preservation and Development's <a href="https://www.nyc.gov/assets/hpd/downloads/pdfs/about/2023-nychvs-selected-initial-findings.pdf" target="_blank" rel="noreferrer">New York City Housing and Vacancy Survey</a>.</p>
+          </article>
+          <article>
+            <span>03 / LIMITS</span>
+            <p>Asking rents are not the same as rents paid by all current tenants. Values are nominal dollars and are not inflation-adjusted. Platform coverage is thinner in Staten Island and the Bronx, so changes there can be more volatile.</p>
+          </article>
+          <article>
+            <span>04 / SNAPSHOT</span>
+            <p>The page uses a fixed, locally stored snapshot covering July 2016 through June 2026. This keeps the analysis and submitted screenshot reproducible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="reflection section-pad">
+      <p class="eyebrow">Assignment reflection</p>
+      <blockquote>Temporal structure is used here as transit infrastructure. Each month is a position along the route, every key housing event becomes a transfer station, and the changing height and density of the lines reveal how price and supply moved through the same decade at different speeds.</blockquote>
+      <div class="reflection-footer">
+        <span>Ci Song / Computational Design Workflows / 2026</span>
+        <a href="index.html">Return to the course website →</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="assignment4.js"></script>
+</body>
+
+</html>

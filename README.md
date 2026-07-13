@@ -14,3 +14,15 @@ This repo includes an updated website template created through AI-assisted codin
 - `aesthetic-style.md` documents the aesthetic style for the assignment.
 
 The original `hello-world.txt` file is preserved from the first GitHub assignment.
+
+## Assignment 4 — NYC Rent Lines
+
+`assignment4.html` is a standalone D3.js temporal visualization of monthly New York City asking rents and rental inventory from July 2016 through June 2026.
+
+- `assignment4.css` defines the cinematic New York subway visual system.
+- `assignment4.js` builds the synchronized D3 timeline, playback controls, scrollytelling stops, tooltips, and animated borough ranking board.
+- `data/nyc-rent-lines.csv` contains 600 monthly borough records from the StreetEasy Data Dashboard.
+- `data/nyc-vacancy-rates.csv` contains official 2017, 2021, and 2023 citywide vacancy markers from the NYC Housing and Vacancy Survey.
+- `submission/assignment4-submission.jpg` is the ready-to-upload D3 timeline screenshot; `submission/assignment4-data-board.jpg` documents the animated ranking view.
+
+Because the visualization loads local CSV files, run the repository through a local web server rather than opening the HTML file directly.
