@@ -87,7 +87,7 @@
       strength: +row.strength,
       type: row.type,
       department: row.department,
-      curve: ((index % 5) - 2) * 10
+      curve: ((index % 5) - 2) * 6
     }))
   ])
     .then(([nodes, links]) => {
@@ -143,15 +143,15 @@
     Object.entries(categoryColors).forEach(([category, color]) => {
       defs.append("marker")
         .attr("id", `arrow-${category.toLowerCase()}`)
-        .attr("viewBox", "0 -4 8 8")
-        .attr("refX", 7.2)
+        .attr("viewBox", "0 -3.5 7 7")
+        .attr("refX", 6.4)
         .attr("refY", 0)
-        .attr("markerWidth", 8)
-        .attr("markerHeight", 8)
+        .attr("markerWidth", 7)
+        .attr("markerHeight", 7)
         .attr("markerUnits", "userSpaceOnUse")
         .attr("orient", "auto")
         .append("path")
-        .attr("d", "M0,-3L7,0L0,3")
+        .attr("d", "M0,-2.5L6.4,0L0,2.5")
         .attr("fill", color);
     });
 
@@ -403,20 +403,27 @@
   }
 
   function linkPath(d) {
-    const dx = d.target.x - d.source.x;
-    const dy = d.target.y - d.source.y;
+    const source = { x: d.source.x, y: d.source.y, r: d.source.radius + 2 };
+    const target = { x: d.target.x, y: d.target.y, r: d.target.radius + 2 };
+    const dx = target.x - source.x;
+    const dy = target.y - source.y;
     const len = Math.max(1, Math.hypot(dx, dy));
-    const ux = dx / len;
-    const uy = dy / len;
-    const sx = d.source.x + ux * (d.source.radius + 3);
-    const sy = d.source.y + uy * (d.source.radius + 3);
-    const tx = d.target.x - ux * (d.target.radius + 6);
-    const ty = d.target.y - uy * (d.target.radius + 6);
     const nx = -dy / len;
     const ny = dx / len;
-    const mx = (sx + tx) / 2 + nx * d.curve;
-    const my = (sy + ty) / 2 + ny * d.curve;
-    return `M${sx},${sy} Q${mx},${my} ${tx},${ty}`;
+    const cx = (source.x + target.x) / 2 + nx * d.curve;
+    const cy = (source.y + target.y) / 2 + ny * d.curve;
+    const startVector = unitVector(cx - source.x, cy - source.y);
+    const endVector = unitVector(target.x - cx, target.y - cy);
+    const sx = source.x + startVector.x * source.r;
+    const sy = source.y + startVector.y * source.r;
+    const tx = target.x - endVector.x * target.r;
+    const ty = target.y - endVector.y * target.r;
+    return `M${sx},${sy} Q${cx},${cy} ${tx},${ty}`;
+  }
+
+  function unitVector(dx, dy) {
+    const len = Math.max(1, Math.hypot(dx, dy));
+    return { x: dx / len, y: dy / len };
   }
 
   function sourceId(link) {
