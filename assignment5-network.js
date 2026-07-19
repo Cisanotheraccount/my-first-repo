@@ -51,6 +51,10 @@
     Events: "#f8f3e6"
   };
 
+  function radiusFromSize(size) {
+    return Math.max(12, Math.round(size * 0.62));
+  }
+
   let allNodes = [];
   let allLinks = [];
   let simulation = null;
@@ -71,7 +75,7 @@
       value: +row.age,
       department: row.department,
       connections: +row.friends,
-      radius: +row.size,
+      radius: radiusFromSize(+row.size),
       color: row.color
     })),
     d3.csv("data/assignment5-edges.csv", (row, index) => ({
@@ -115,7 +119,7 @@
 
     const width = Math.max(340, shell.clientWidth || 980);
     const compact = width < 720;
-    const height = compact ? 680 : 760;
+    const height = compact ? 600 : 640;
     const { nodes, links } = cloneData();
 
     seedPositions(nodes, width, height, compact);
@@ -139,14 +143,15 @@
     Object.entries(categoryColors).forEach(([category, color]) => {
       defs.append("marker")
         .attr("id", `arrow-${category.toLowerCase()}`)
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 17)
+        .attr("viewBox", "0 -4 8 8")
+        .attr("refX", 7.2)
         .attr("refY", 0)
-        .attr("markerWidth", 7)
-        .attr("markerHeight", 7)
+        .attr("markerWidth", 8)
+        .attr("markerHeight", 8)
+        .attr("markerUnits", "userSpaceOnUse")
         .attr("orient", "auto")
         .append("path")
-        .attr("d", "M0,-5L10,0L0,5")
+        .attr("d", "M0,-3L7,0L0,3")
         .attr("fill", color);
     });
 
@@ -157,7 +162,7 @@
       .attr("width", "260%")
       .attr("height", "260%");
     glow.append("feGaussianBlur")
-      .attr("stdDeviation", "6")
+      .attr("stdDeviation", "3.5")
       .attr("result", "blur");
     glow.append("feMerge")
       .selectAll("feMergeNode")
@@ -191,7 +196,7 @@
       .join("path")
       .attr("class", "network-link")
       .attr("stroke", (d) => categoryColors[d.department] || "#ffffff")
-      .attr("stroke-width", (d) => 1.1 + d.strength * 6)
+      .attr("stroke-width", (d) => 0.75 + d.strength * 3.2)
       .attr("marker-end", (d) => d.type === "directed" ? `url(#arrow-${d.department.toLowerCase()})` : null)
       .on("pointerenter", (event, d) => showLinkTooltip(event, d))
       .on("pointermove", moveTooltip)
@@ -222,7 +227,7 @@
 
     node.append("circle")
       .attr("class", "node-halo")
-      .attr("r", (d) => d.radius + 9)
+      .attr("r", (d) => d.radius + 5)
       .attr("fill", (d) => d.color)
       .attr("filter", "url(#network-glow)");
 
@@ -241,19 +246,19 @@
     node.append("text")
       .attr("class", "node-label")
       .attr("text-anchor", "middle")
-      .attr("dy", (d) => d.radius + 22)
+      .attr("dy", (d) => d.radius + 15)
       .text((d) => d.name);
 
     simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links)
         .id((d) => d.id)
-        .distance((d) => compact ? 96 + d.strength * 26 : 126 + d.strength * 38)
-        .strength((d) => 0.18 + d.strength * 0.28))
-      .force("charge", d3.forceManyBody().strength((d) => d.role === "system" ? -900 : -420))
+        .distance((d) => compact ? 82 + d.strength * 18 : 104 + d.strength * 26)
+        .strength((d) => 0.16 + d.strength * 0.24))
+      .force("charge", d3.forceManyBody().strength((d) => d.role === "system" ? -580 : -290))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("x", d3.forceX((d) => anchor(d, width, height, compact).x).strength(0.075))
       .force("y", d3.forceY((d) => anchor(d, width, height, compact).y).strength(0.08))
-      .force("collision", d3.forceCollide((d) => d.radius + (compact ? 18 : 24)))
+      .force("collision", d3.forceCollide((d) => d.radius + (compact ? 12 : 16)))
       .on("tick", ticked);
 
     simulation.tick(compact ? 90 : 130);
@@ -327,19 +332,19 @@
     });
 
     boroughs.forEach((d, i) => {
-      const point = ringPoint(width * (compact ? 0.5 : 0.28), height * (compact ? 0.38 : 0.52), compact ? 165 : 210, i, boroughs.length, -Math.PI / 2);
+      const point = ringPoint(width * (compact ? 0.5 : 0.29), height * (compact ? 0.38 : 0.52), compact ? 135 : 170, i, boroughs.length, -Math.PI / 2);
       d.x = point.x;
       d.y = point.y;
     });
 
     metrics.forEach((d, i) => {
-      const point = ringPoint(width * (compact ? 0.5 : 0.67), height * (compact ? 0.5 : 0.36), compact ? 180 : 190, i, metrics.length, Math.PI * 0.12);
+      const point = ringPoint(width * (compact ? 0.5 : 0.66), height * (compact ? 0.5 : 0.36), compact ? 145 : 155, i, metrics.length, Math.PI * 0.12);
       d.x = point.x;
       d.y = point.y;
     });
 
     events.forEach((d, i) => {
-      const point = ringPoint(width * (compact ? 0.5 : 0.68), height * (compact ? 0.58 : 0.66), compact ? 190 : 210, i, events.length, Math.PI * 0.35);
+      const point = ringPoint(width * (compact ? 0.5 : 0.68), height * (compact ? 0.58 : 0.66), compact ? 150 : 165, i, events.length, Math.PI * 0.35);
       d.x = point.x;
       d.y = point.y;
     });
@@ -372,7 +377,7 @@
   function drawFrame(frame, width, height, compact) {
     const cx = width / 2;
     const cy = height / 2;
-    const rings = compact ? [120, 210, 300] : [150, 255, 360];
+    const rings = compact ? [96, 168, 242] : [112, 196, 280];
     frame.selectAll("circle")
       .data(rings)
       .join("circle")
@@ -398,13 +403,15 @@
   }
 
   function linkPath(d) {
-    const sx = d.source.x;
-    const sy = d.source.y;
-    const tx = d.target.x;
-    const ty = d.target.y;
-    const dx = tx - sx;
-    const dy = ty - sy;
+    const dx = d.target.x - d.source.x;
+    const dy = d.target.y - d.source.y;
     const len = Math.max(1, Math.hypot(dx, dy));
+    const ux = dx / len;
+    const uy = dy / len;
+    const sx = d.source.x + ux * (d.source.radius + 3);
+    const sy = d.source.y + uy * (d.source.radius + 3);
+    const tx = d.target.x - ux * (d.target.radius + 6);
+    const ty = d.target.y - uy * (d.target.radius + 6);
     const nx = -dy / len;
     const ny = dx / len;
     const mx = (sx + tx) / 2 + nx * d.curve;
