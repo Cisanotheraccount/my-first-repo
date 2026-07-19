@@ -1,0 +1,18 @@
+id,name,role,age,department,friends,size,color
+nyc_market,NYC Rental Market,system,2026,System,14,44,#f8f3e6
+manhattan,Manhattan,borough,46,Borough,6,34,#e4473b
+brooklyn,Brooklyn,borough,44,Borough,6,32,#f4c743
+queens,Queens,borough,45,Borough,6,31,#f47738
+bronx,Bronx,borough,76,Borough,6,33,#44964a
+staten_island,Staten Island,borough,61,Borough,6,29,#17489e
+asking_rent,Asking Rent,metric,4965,Rent,6,30,#ffefe8
+rent_growth,Rent Growth,metric,76,Rent,7,34,#ffb3a8
+rent_pressure,Rent Pressure,metric,2026,Rent,7,36,#ffe9a8
+rental_inventory,Rental Inventory,metric,40359,Supply,7,31,#d7f1d9
+inventory_shock,Inventory Shock,metric,196,Supply,8,34,#9fd6a3
+vacancy_tightness,Vacancy Tightness,metric,1,Vacancy,6,34,#b9c8ff
+event_2020_shock,2020 Inventory Shock,event,2020,Events,5,29,#f8f3e6
+event_2021_trough,2021 Rent Trough,event,2021,Events,5,29,#f8f3e6
+event_2022_rebound,2022 Rapid Rebound,event,2022,Events,5,30,#f8f3e6
+event_2023_vacancy_low,2023 Vacancy Low,event,2023,Events,5,31,#f8f3e6
+event_2026_terminus,2026 High-Rent Terminus,event,2026,Events,6,32,#f8f3e6

@@ -1,0 +1,42 @@
+source,target,relationship,course,since,strength,type,department
+nyc_market,manhattan,borough-channel,Most expensive route in the system,2016,0.92,bidirectional,System
+nyc_market,brooklyn,borough-channel,Central route with strong rebound,2016,0.84,bidirectional,System
+nyc_market,queens,borough-channel,Middle route with fast recovery,2016,0.78,bidirectional,System
+nyc_market,bronx,borough-channel,Fastest percentage rent growth,2016,0.86,bidirectional,System
+nyc_market,staten_island,borough-channel,Smallest inventory sample and strong rise,2016,0.68,bidirectional,System
+nyc_market,rent_pressure,system-pressure,Combined pressure reading across rent and supply,2026,0.92,directed,System
+manhattan,asking_rent,rent-level,June 2026 median asking rent reaches $4965,2026,0.98,directed,Rent
+brooklyn,asking_rent,rent-level,June 2026 median asking rent reaches $3900,2026,0.82,directed,Rent
+queens,asking_rent,rent-level,June 2026 median asking rent reaches $3350,2026,0.72,directed,Rent
+bronx,asking_rent,rent-level,June 2026 median asking rent reaches $2995,2026,0.62,directed,Rent
+staten_island,asking_rent,rent-level,June 2026 median asking rent reaches $3300,2026,0.68,directed,Rent
+manhattan,rent_growth,ten-year-change,Asking rent rises 46 percent from baseline,2026,0.68,directed,Rent
+brooklyn,rent_growth,ten-year-change,Asking rent rises 44 percent from baseline,2026,0.66,directed,Rent
+queens,rent_growth,ten-year-change,Asking rent rises 45 percent from baseline,2026,0.67,directed,Rent
+bronx,rent_growth,ten-year-change,Asking rent rises 76 percent from baseline,2026,0.96,directed,Rent
+staten_island,rent_growth,ten-year-change,Asking rent rises 61 percent from baseline,2026,0.82,directed,Rent
+rent_growth,rent_pressure,pressure-driver,Rent growth increases pressure across the system,2026,0.86,directed,Rent
+asking_rent,rent_pressure,price-driver,High asking rent defines immediate household burden,2026,0.78,directed,Rent
+manhattan,rental_inventory,supply-scale,Peak observed listings reach 40359 in 2020,2020,0.98,directed,Supply
+brooklyn,rental_inventory,supply-scale,Peak observed listings reach 25152 in 2020,2020,0.86,directed,Supply
+queens,rental_inventory,supply-scale,Peak observed listings reach 7777 in 2020,2020,0.58,directed,Supply
+bronx,rental_inventory,supply-scale,Peak observed listings reach 1328 in the dataset,2025,0.32,directed,Supply
+staten_island,rental_inventory,supply-scale,Peak observed listings reach 124 in the dataset,2017,0.22,directed,Supply
+manhattan,inventory_shock,pandemic-supply-shock,Inventory reaches 167 percent of July 2016 baseline,2020,0.86,directed,Supply
+brooklyn,inventory_shock,pandemic-supply-shock,Inventory reaches 196 percent of July 2016 baseline,2020,0.96,directed,Supply
+queens,inventory_shock,pandemic-supply-shock,Inventory reaches 192 percent of July 2016 baseline,2020,0.92,directed,Supply
+bronx,inventory_shock,supply-volatility,Inventory reaches 188 percent of July 2016 baseline,2025,0.58,directed,Supply
+staten_island,inventory_shock,supply-volatility,Inventory reaches 165 percent of July 2016 baseline,2017,0.48,directed,Supply
+rental_inventory,vacancy_tightness,supply-vacancy-link,Low available supply relates to tighter vacancy,2023,0.76,directed,Vacancy
+vacancy_tightness,rent_pressure,vacancy-pressure-link,Low vacancy raises system pressure,2023,0.9,directed,Vacancy
+inventory_shock,event_2020_shock,event-signal,Available listings spike during pandemic market disruption,2020,0.88,directed,Events
+event_2020_shock,event_2021_trough,event-sequence,More inventory is followed by central rent troughs,2021,0.82,directed,Events
+event_2021_trough,event_2022_rebound,event-sequence,Discount period closes as inventory contracts,2022,0.84,directed,Events
+event_2022_rebound,event_2026_terminus,event-sequence,Rebound carries forward into higher terminal rents,2026,0.8,directed,Events
+vacancy_tightness,event_2023_vacancy_low,official-checkpoint,HVS records 1.41 percent net rental vacancy,2023,0.96,directed,Vacancy
+event_2023_vacancy_low,rent_pressure,official-pressure-checkpoint,Historic vacancy low frames citywide pressure,2023,0.92,directed,Vacancy
+event_2026_terminus,manhattan,arrives-higher,Manhattan ends 46 percent above baseline,2026,0.68,directed,Events
+event_2026_terminus,brooklyn,arrives-higher,Brooklyn ends 44 percent above baseline,2026,0.66,directed,Events
+event_2026_terminus,queens,arrives-higher,Queens ends 45 percent above baseline,2026,0.67,directed,Events
+event_2026_terminus,bronx,arrives-higher,Bronx ends 76 percent above baseline,2026,0.96,directed,Events
+event_2026_terminus,staten_island,arrives-higher,Staten Island ends 61 percent above baseline,2026,0.82,directed,Events
