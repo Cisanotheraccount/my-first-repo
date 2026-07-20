@@ -210,9 +210,15 @@
         .on("start", dragStarted)
         .on("drag", dragged)
         .on("end", dragEnded))
-      .on("pointerenter", (event, d) => showNodeTooltip(event, d))
+      .on("pointerenter", (event, d) => {
+        d3.select(event.currentTarget).raise().classed("is-hovered", true);
+        showNodeTooltip(event, d);
+      })
       .on("pointermove", moveTooltip)
-      .on("pointerleave", hideTooltip)
+      .on("pointerleave", (event) => {
+        d3.select(event.currentTarget).classed("is-hovered", false);
+        hideTooltip();
+      })
       .on("click", (event, d) => {
         event.stopPropagation();
         focusedId = focusedId === d.id ? null : d.id;
