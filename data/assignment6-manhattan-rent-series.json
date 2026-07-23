@@ -131,13 +131,15 @@
       "reason": "StreetEasy row has missing values through the 2026 endpoint."
     }
   ],
-  "hexRadiusMeters": 900,
+  "hexRadiusMeters": 300,
   "heightScale": {
     "lowRentReference": 2195,
     "highRentReference": 7400,
-    "minHeightMeters": 140,
-    "maxHeightMeters": 2240
+    "minHeightMeters": 22,
+    "maxHeightMeters": 240
   },
+  "neighborhoodSourceCount": 31,
+  "hexCellCount": 217,
   "neighborhoods": [
     {
       "id": "battery_park_city",
@@ -4324,5 +4326,17 @@
         "2026-06": 6300
       }
     }
-  ]
+  ],
+  "layout": {
+    "type": "center-in-polygon honeycomb grid",
+    "description": "300-meter hex cells are generated inside Manhattan residential NTA polygons. Each cell inherits the monthly rent series from the nearest StreetEasy neighborhood centroid.",
+    "excludedGeographies": [
+      "Central Park",
+      "Highbridge Park",
+      "Inwood Hill Park",
+      "Randall's Island",
+      "The Battery-Governors Island-Ellis Island-Liberty Island"
+    ],
+    "includedNtaCount": 33
+  }
 }

@@ -14,11 +14,11 @@ The visual direction is a dark, polished MapDrop interface: a tilted map object 
 - Rent source: StreetEasy Data Dashboard master report, `medianAskingRent_All.csv`.
 - Time range: July 2016 through June 2026.
 - Geography source: NYC Open Data 2020 Neighborhood Tabulation Areas.
-- Map unit: 31 Manhattan neighborhood hexes with complete StreetEasy rent values through June 2026.
-- Hex radius: 900 meters, intentionally enlarged so the work reads as a stylized Manhattan terrain rather than a precise parcel map.
+- Map unit: 217 Manhattan hex cells with complete StreetEasy rent values through June 2026.
+- Hex radius: 300 meters. The cells are generated as a honeycomb grid inside Manhattan residential NTA polygons so the map reads as a spatial terrain rather than a set of oversized neighborhood markers.
 - Civic Center is excluded because its StreetEasy row has missing values through the endpoint of this snapshot.
 
-Each hex stores a Manhattan neighborhood location. The time slider updates the current month, median asking rent, column height, and color. The hex map is a stylized geospatial model, not an official neighborhood boundary map.
+Each hex stores a Manhattan cell location and inherits the rent series from the nearest StreetEasy neighborhood centroid. The time slider updates the current month, median asking rent, column height, and color. The hex map is a stylized geospatial model, not an official neighborhood boundary map.
 
 ## Interaction
 

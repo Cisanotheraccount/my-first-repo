@@ -20,10 +20,11 @@
   const formatMonth = d3.timeFormat("%b %Y");
   const formatCurrency = d3.format("$,.0f");
   const formatPct = d3.format("+.1f");
+  const assetVersion = "20260723-hexgrid-2";
   const initialCamera = {
-    center: [-73.978, 40.785],
-    zoom: 11.35,
-    pitch: 62,
+    center: [-73.968, 40.788],
+    zoom: 11.08,
+    pitch: 60,
     bearing: -28
   };
   const fallbackStyle = {
@@ -50,7 +51,7 @@
     maxZoom: 17,
     minPitch: 0,
     maxPitch: 82,
-    maxBounds: [[-74.08, 40.65], [-73.86, 40.91]],
+    maxBounds: [[-74.16, 40.58], [-73.78, 40.98]],
     antialias: true,
     preserveDrawingBuffer: true,
     interactive: true,
@@ -120,9 +121,9 @@
   let sparkResizeObserver = null;
 
   Promise.all([
-    fetch("data/assignment6-manhattan-rent-hex.geojson").then(assertJson),
-    fetch("data/assignment6-manhattan-rent-series.json").then(assertJson),
-    fetch("data/assignment6-manhattan-nta.geojson").then(assertJson)
+    fetch(`data/assignment6-manhattan-rent-hex.geojson?v=${assetVersion}`).then(assertJson),
+    fetch(`data/assignment6-manhattan-rent-series.json?v=${assetVersion}`).then(assertJson),
+    fetch(`data/assignment6-manhattan-nta.geojson?v=${assetVersion}`).then(assertJson)
   ])
     .then(([hexData, seriesData, boundaryData]) => {
       baseHexes = hexData;
@@ -213,8 +214,8 @@
         "fill-extrusion-height": [
           "+",
           ["get", "currentHeight"],
-          ["case", ["boolean", ["feature-state", "hover"], false], 260, 0],
-          ["case", ["boolean", ["feature-state", "selected"], false], 180, 0]
+          ["case", ["boolean", ["feature-state", "hover"], false], 28, 0],
+          ["case", ["boolean", ["feature-state", "selected"], false], 18, 0]
         ],
         "fill-extrusion-color": [
           "case",
@@ -234,7 +235,7 @@
             "#ffe0a3"
           ]
         ],
-        "fill-extrusion-opacity": 0.93,
+        "fill-extrusion-opacity": 0.9,
         "fill-extrusion-vertical-gradient": true
       }
     });
@@ -286,12 +287,19 @@
         "line-width": [
           "case",
           ["boolean", ["feature-state", "hover"], false],
-          2.2,
+          1.35,
           ["boolean", ["feature-state", "selected"], false],
-          2.6,
-          1.35
+          1.6,
+          0.45
         ],
-        "line-opacity": 0.95
+        "line-opacity": [
+          "case",
+          ["boolean", ["feature-state", "hover"], false],
+          0.95,
+          ["boolean", ["feature-state", "selected"], false],
+          0.95,
+          0.48
+        ]
       }
     });
 
@@ -411,7 +419,7 @@
     return {
       ...baseHexes,
       features: baseHexes.features.map((feature) => {
-        const row = series.rowsById.get(feature.properties.id);
+        const row = rowForFeature(feature);
         const rent = row.rents[month];
         const growthPct = ((rent / row.baselineRent) - 1) * 100;
         return {
@@ -437,6 +445,15 @@
     return Math.round(scale.minHeightMeters + t * (scale.maxHeightMeters - scale.minHeightMeters));
   }
 
+  function rowForFeature(feature) {
+    return series.rowsById.get(feature.properties.sourceNeighborhoodId || feature.properties.id);
+  }
+
+  function rowForHexId(id) {
+    const feature = currentHexes?.features.find((item) => item.properties.id === id);
+    return feature ? rowForFeature(feature) : series.rowsById.get(id);
+  }
+
   function updateUiForMonth(index) {
     const month = series.months[index];
     const date = parseMonth(month);
@@ -444,7 +461,7 @@
   }
 
   function updateReadout(id) {
-    const row = id ? series.rowsById.get(id) : null;
+    const row = id ? rowForHexId(id) : null;
     const month = series.months[monthIndex];
     const rent = row ? row.rents[month] : null;
     const growth = row && rent ? ((rent / row.baselineRent) - 1) * 100 : null;
@@ -656,7 +673,7 @@
   }
 
   function selectedValues(id) {
-    const row = series.rowsById.get(id);
+    const row = rowForHexId(id);
     return series.months.map((month) => row.rents[month]);
   }
 
