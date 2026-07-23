@@ -21,9 +21,9 @@
   const formatMonth = d3.timeFormat("%b %Y");
   const formatCurrency = d3.format("$,.0f");
   const formatPct = d3.format("+.1f");
-  const assetVersion = "20260723-smoothplay-1";
+  const assetVersion = "20260723-smoothplay-30s";
   const verticalExaggeration = 10;
-  const playbackDurationMs = 10000;
+  const playbackDurationMs = 30000;
   const playbackFrameIntervalMs = 1000 / 45;
   const initialCamera = {
     center: [-73.968, 40.788],
@@ -422,7 +422,7 @@
   function setPlaybackButtonState(active) {
     if (!playButton) return;
     playButton.setAttribute("aria-pressed", String(active));
-    playButton.textContent = active ? "Pause Loop" : "Play 10s Loop";
+    playButton.textContent = active ? "Pause Loop" : "Play 30s Loop";
   }
 
   function maxMonthIndex() {
