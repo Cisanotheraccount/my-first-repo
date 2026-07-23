@@ -6,6 +6,7 @@
   const tokenNotice = document.querySelector("[data-map-token]");
   const monthLabel = document.querySelector("[data-map-month]");
   const slider = document.querySelector("#rent-hex-time");
+  const playButton = document.querySelector("[data-map-play]");
   const resetButton = document.querySelector("[data-map-reset]");
   const tooltip = document.querySelector("[data-map-tooltip]");
   const fallbackPreview = document.querySelector("[data-map-preview]");
@@ -20,8 +21,9 @@
   const formatMonth = d3.timeFormat("%b %Y");
   const formatCurrency = d3.format("$,.0f");
   const formatPct = d3.format("+.1f");
-  const assetVersion = "20260723-height-10x";
+  const assetVersion = "20260723-autoplay-1";
   const verticalExaggeration = 10;
+  const playbackDurationMs = 10000;
   const initialCamera = {
     center: [-73.968, 40.788],
     zoom: 11.08,
@@ -84,6 +86,7 @@
         bearing: map.getBearing(),
         center: map.getCenter().toArray(),
         monthIndex,
+        isPlaying,
         hoveredId,
         selectedId,
         hasHexSource: Boolean(map.getSource("rent-hexes")),
@@ -120,6 +123,9 @@
   let selectedId = null;
   let selectedPopup = null;
   let sparkResizeObserver = null;
+  let isPlaying = false;
+  let playbackFrame = null;
+  let playbackStartTime = 0;
 
   Promise.all([
     fetch(`data/assignment6-manhattan-rent-hex.geojson?v=${assetVersion}`).then(assertJson),
@@ -342,9 +348,11 @@
     });
 
     slider?.addEventListener("input", () => {
-      monthIndex = Number(slider.value);
-      updateSourceForMonth(monthIndex);
+      setMonthIndex(Number(slider.value), { syncSlider: false });
+      if (isPlaying) alignPlaybackToIndex(monthIndex);
     });
+
+    playButton?.addEventListener("click", togglePlayback);
 
     resetButton?.addEventListener("click", () => {
       map.easeTo({
@@ -358,6 +366,58 @@
       sparkResizeObserver = new ResizeObserver(() => renderSparkline(selectedId));
       sparkResizeObserver.observe(sparkline.node());
     }
+  }
+
+  function togglePlayback() {
+    if (isPlaying) {
+      pausePlayback();
+    } else {
+      startPlayback();
+    }
+  }
+
+  function startPlayback() {
+    if (!series) return;
+    const maxIndex = maxMonthIndex();
+    const startIndex = monthIndex >= maxIndex ? 0 : monthIndex;
+    setMonthIndex(startIndex);
+    alignPlaybackToIndex(startIndex);
+    isPlaying = true;
+    setPlaybackButtonState(true);
+    playbackFrame = requestAnimationFrame(runPlayback);
+  }
+
+  function pausePlayback() {
+    isPlaying = false;
+    if (playbackFrame !== null) cancelAnimationFrame(playbackFrame);
+    playbackFrame = null;
+    setPlaybackButtonState(false);
+  }
+
+  function runPlayback(timestamp) {
+    if (!isPlaying || !series) return;
+    const maxIndex = maxMonthIndex();
+    const elapsed = (timestamp - playbackStartTime) % playbackDurationMs;
+    const nextIndex = Math.round((elapsed / playbackDurationMs) * maxIndex);
+    if (nextIndex !== monthIndex) setMonthIndex(nextIndex);
+    playbackFrame = requestAnimationFrame(runPlayback);
+  }
+
+  function alignPlaybackToIndex(index) {
+    const maxIndex = maxMonthIndex();
+    const safeIndex = clamp(Math.round(index), 0, maxIndex);
+    const progress = maxIndex === 0 ? 0 : safeIndex / maxIndex;
+    playbackStartTime = performance.now() - progress * playbackDurationMs;
+  }
+
+  function setPlaybackButtonState(active) {
+    if (!playButton) return;
+    playButton.setAttribute("aria-pressed", String(active));
+    playButton.textContent = active ? "Pause Loop" : "Play 10s Loop";
+  }
+
+  function maxMonthIndex() {
+    return Math.max(0, (series?.months.length || 1) - 1);
   }
 
   function clearHover() {
@@ -413,6 +473,13 @@
       renderSparkline(null);
     }
     renderFallbackPreview(index);
+  }
+
+  function setMonthIndex(index, options = {}) {
+    const { syncSlider = true } = options;
+    monthIndex = clamp(Math.round(index), 0, maxMonthIndex());
+    if (syncSlider && slider) slider.value = String(monthIndex);
+    updateSourceForMonth(monthIndex);
   }
 
   function buildMonthCollection(index) {
@@ -703,6 +770,7 @@
   }
 
   window.addEventListener("beforeunload", () => {
+    if (playbackFrame !== null) cancelAnimationFrame(playbackFrame);
     sparkResizeObserver?.disconnect();
   });
 })();

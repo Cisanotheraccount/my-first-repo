@@ -116,6 +116,14 @@
   appearance: none;
 }
 
+.mapdrop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.mapdrop-play,
 .mapdrop-reset {
   min-height: 44px;
   padding: 0 18px;
@@ -132,9 +140,25 @@
   transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 
+.mapdrop-play {
+  background:
+    linear-gradient(135deg, rgba(255, 224, 163, 0.18), rgba(110, 168, 255, 0.12)),
+    rgba(248, 243, 230, 0.08);
+}
+
 .mapdrop-reset:hover {
   border-color: rgba(248, 243, 230, 0.5);
   background: rgba(248, 243, 230, 0.14);
+  transform: translateY(-1px);
+}
+
+.mapdrop-play:hover,
+.mapdrop-play[aria-pressed="true"] {
+  border-color: rgba(255, 224, 163, 0.58);
+  background:
+    linear-gradient(135deg, rgba(255, 224, 163, 0.3), rgba(110, 168, 255, 0.18)),
+    rgba(248, 243, 230, 0.12);
+  box-shadow: 0 0 28px rgba(255, 224, 163, 0.12);
   transform: translateY(-1px);
 }
 

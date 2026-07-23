@@ -10,7 +10,7 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.css" rel="stylesheet">
   <link rel="stylesheet" href="assignment4.css?v=20260719-relational-1">
   <link rel="stylesheet" href="assignment5.css?v=20260719-relational-4">
-  <link rel="stylesheet" href="assignment6.css?v=20260723-height-10x">
+  <link rel="stylesheet" href="assignment6.css?v=20260723-autoplay-1">
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.js"></script>
 </head>
@@ -401,7 +401,10 @@
               </div>
               <label class="mapdrop-slider-label" for="rent-hex-time">Rent month</label>
               <input id="rent-hex-time" class="mapdrop-slider" type="range" min="0" max="119" value="119" step="1">
-              <button class="mapdrop-reset" type="button" data-map-reset>Reset 2.5D view</button>
+              <div class="mapdrop-actions">
+                <button class="mapdrop-play" type="button" data-map-play aria-pressed="false">Play 10s Loop</button>
+                <button class="mapdrop-reset" type="button" data-map-reset>Reset 2.5D view</button>
+              </div>
             </div>
 
             <div class="mapdrop-shell">
@@ -493,7 +496,7 @@
   <script src="mapbox-config.js?v=20260722-geospatial-1"></script>
   <script src="assignment4.js?v=20260713-rent-only-2"></script>
   <script src="assignment5-network.js?v=20260719-relational-4"></script>
-  <script src="assignment6-map.js?v=20260723-height-10x"></script>
+  <script src="assignment6-map.js?v=20260723-autoplay-1"></script>
 </body>
 
 </html>
