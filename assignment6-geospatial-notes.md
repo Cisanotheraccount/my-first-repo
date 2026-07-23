@@ -27,7 +27,7 @@ Column height is mapped from median asking rent into an 18-420 meter data range,
 - The map opens in a 2.5D camera angle with pitch and bearing.
 - Users can zoom, pan, rotate, and tilt the map with Mapbox controls and gestures.
 - The slider changes the month and updates all hex column heights.
-- The autoplay button loops from 2016 to 2026 in 10 seconds; users can still drag the timeline manually during playback.
+- The autoplay button loops from 2016 to 2026 in 10 seconds. During playback, hex heights interpolate between adjacent months with a smooth easing curve; users can still drag the timeline manually.
 - Hovering a hex shows neighborhood data.
 - Clicking a hex locks the neighborhood and draws a small rent timeline.
 

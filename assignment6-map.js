@@ -21,9 +21,10 @@
   const formatMonth = d3.timeFormat("%b %Y");
   const formatCurrency = d3.format("$,.0f");
   const formatPct = d3.format("+.1f");
-  const assetVersion = "20260723-autoplay-1";
+  const assetVersion = "20260723-smoothplay-1";
   const verticalExaggeration = 10;
   const playbackDurationMs = 10000;
+  const playbackFrameIntervalMs = 1000 / 45;
   const initialCamera = {
     center: [-73.968, 40.788],
     zoom: 11.08,
@@ -86,6 +87,7 @@
         bearing: map.getBearing(),
         center: map.getCenter().toArray(),
         monthIndex,
+        timelinePosition,
         isPlaying,
         hoveredId,
         selectedId,
@@ -119,6 +121,7 @@
   let boundary = null;
   let series = null;
   let monthIndex = 119;
+  let timelinePosition = 119;
   let hoveredId = null;
   let selectedId = null;
   let selectedPopup = null;
@@ -126,6 +129,7 @@
   let isPlaying = false;
   let playbackFrame = null;
   let playbackStartTime = 0;
+  let lastPlaybackUpdate = 0;
 
   Promise.all([
     fetch(`data/assignment6-manhattan-rent-hex.geojson?v=${assetVersion}`).then(assertJson),
@@ -137,6 +141,7 @@
       series = prepareSeries(seriesData);
       boundary = boundaryData;
       monthIndex = series.months.length - 1;
+      timelinePosition = monthIndex;
       if (slider) {
         slider.max = String(series.months.length - 1);
         slider.value = String(monthIndex);
@@ -348,8 +353,8 @@
     });
 
     slider?.addEventListener("input", () => {
-      setMonthIndex(Number(slider.value), { syncSlider: false });
-      if (isPlaying) alignPlaybackToIndex(monthIndex);
+      setTimelinePosition(Number(slider.value), { forceUi: true, syncSlider: false });
+      if (isPlaying) alignPlaybackToPosition(timelinePosition);
     });
 
     playButton?.addEventListener("click", togglePlayback);
@@ -379,10 +384,11 @@
   function startPlayback() {
     if (!series) return;
     const maxIndex = maxMonthIndex();
-    const startIndex = monthIndex >= maxIndex ? 0 : monthIndex;
-    setMonthIndex(startIndex);
-    alignPlaybackToIndex(startIndex);
+    const startPosition = timelinePosition >= maxIndex ? 0 : timelinePosition;
+    setTimelinePosition(startPosition, { forceUi: true });
+    alignPlaybackToPosition(startPosition);
     isPlaying = true;
+    lastPlaybackUpdate = 0;
     setPlaybackButtonState(true);
     playbackFrame = requestAnimationFrame(runPlayback);
   }
@@ -398,15 +404,18 @@
     if (!isPlaying || !series) return;
     const maxIndex = maxMonthIndex();
     const elapsed = (timestamp - playbackStartTime) % playbackDurationMs;
-    const nextIndex = Math.round((elapsed / playbackDurationMs) * maxIndex);
-    if (nextIndex !== monthIndex) setMonthIndex(nextIndex);
+    const nextPosition = (elapsed / playbackDurationMs) * maxIndex;
+    if (timestamp - lastPlaybackUpdate >= playbackFrameIntervalMs) {
+      setTimelinePosition(nextPosition);
+      lastPlaybackUpdate = timestamp;
+    }
     playbackFrame = requestAnimationFrame(runPlayback);
   }
 
-  function alignPlaybackToIndex(index) {
+  function alignPlaybackToPosition(position) {
     const maxIndex = maxMonthIndex();
-    const safeIndex = clamp(Math.round(index), 0, maxIndex);
-    const progress = maxIndex === 0 ? 0 : safeIndex / maxIndex;
+    const safePosition = clamp(Number(position) || 0, 0, maxIndex);
+    const progress = maxIndex === 0 ? 0 : safePosition / maxIndex;
     playbackStartTime = performance.now() - progress * playbackDurationMs;
   }
 
@@ -459,43 +468,57 @@
       .addTo(map);
   }
 
-  function updateSourceForMonth(index) {
-    currentHexes = buildMonthCollection(index);
+  function updateSourceForPosition(position, options = {}) {
+    const { forceUi = false, clearInteraction = false } = options;
+    currentHexes = buildMonthCollection(position);
     map.getSource("rent-hexes")?.setData(currentHexes);
-    clearHover();
-    hideTooltip();
-    updateUiForMonth(index);
-    if (selectedId) {
-      map.setFeatureState({ source: "rent-hexes", id: selectedId }, { selected: true });
-      updateReadout(selectedId);
-      renderSparkline(selectedId);
-    } else {
-      renderSparkline(null);
+    if (clearInteraction) {
+      clearHover();
+      hideTooltip();
     }
-    renderFallbackPreview(index);
+
+    const nextMonthIndex = monthIndexForPosition(position);
+    const monthChanged = nextMonthIndex !== monthIndex;
+    monthIndex = nextMonthIndex;
+    timelinePosition = clamp(Number(position) || 0, 0, maxMonthIndex());
+
+    if (forceUi || monthChanged) {
+      updateUiForMonth(monthIndex);
+      if (selectedId) {
+        map.setFeatureState({ source: "rent-hexes", id: selectedId }, { selected: true });
+        updateReadout(selectedId);
+        renderSparkline(selectedId);
+      } else {
+        renderSparkline(null);
+      }
+      renderFallbackPreview(monthIndex);
+    }
   }
 
-  function setMonthIndex(index, options = {}) {
-    const { syncSlider = true } = options;
-    monthIndex = clamp(Math.round(index), 0, maxMonthIndex());
-    if (syncSlider && slider) slider.value = String(monthIndex);
-    updateSourceForMonth(monthIndex);
+  function setTimelinePosition(position, options = {}) {
+    const { syncSlider = true, forceUi = false, clearInteraction = false } = options;
+    const safePosition = clamp(Number(position) || 0, 0, maxMonthIndex());
+    if (syncSlider && slider) slider.value = formatSliderPosition(safePosition);
+    updateSourceForPosition(safePosition, { forceUi, clearInteraction });
   }
 
-  function buildMonthCollection(index) {
-    const month = series.months[index];
+  function buildMonthCollection(position) {
+    const timeWindow = timelineWindow(position);
+    const month = series.months[timeWindow.displayIndex];
     return {
       ...baseHexes,
       features: baseHexes.features.map((feature) => {
         const row = rowForFeature(feature);
-        const rent = row.rents[month];
+        const startRent = row.rents[timeWindow.startMonth];
+        const endRent = row.rents[timeWindow.endMonth];
+        const rent = interpolateNumber(startRent, endRent, timeWindow.progress);
         const growthPct = ((rent / row.baselineRent) - 1) * 100;
         return {
           ...feature,
           properties: {
             ...feature.properties,
             currentMonth: month,
-            currentRent: rent,
+            currentRent: Math.round(rent),
             currentHeight: heightForRent(rent),
             growthPct: Number(growthPct.toFixed(1)),
             baselineRent: row.baselineRent,
@@ -510,7 +533,39 @@
   function heightForRent(rent) {
     const scale = series.heightScale;
     const t = clamp((rent - scale.lowRentReference) / (scale.highRentReference - scale.lowRentReference), 0, 1);
-    return Math.round(scale.minHeightMeters + t * (scale.maxHeightMeters - scale.minHeightMeters));
+    return Number((scale.minHeightMeters + t * (scale.maxHeightMeters - scale.minHeightMeters)).toFixed(2));
+  }
+
+  function timelineWindow(position) {
+    const maxIndex = maxMonthIndex();
+    const safePosition = clamp(Number(position) || 0, 0, maxIndex);
+    const startIndex = Math.floor(safePosition);
+    const endIndex = Math.min(maxIndex, startIndex + 1);
+    const rawProgress = safePosition - startIndex;
+    const progress = smoothstep(rawProgress);
+    return {
+      startMonth: series.months[startIndex],
+      endMonth: series.months[endIndex],
+      displayIndex: monthIndexForPosition(safePosition),
+      progress
+    };
+  }
+
+  function monthIndexForPosition(position) {
+    return clamp(Math.round(Number(position) || 0), 0, maxMonthIndex());
+  }
+
+  function formatSliderPosition(position) {
+    return Number.isInteger(position) ? String(position) : position.toFixed(2);
+  }
+
+  function interpolateNumber(start, end, progress) {
+    return start + (end - start) * progress;
+  }
+
+  function smoothstep(value) {
+    const t = clamp(value, 0, 1);
+    return t * t * (3 - 2 * t);
   }
 
   function rowForFeature(feature) {
