@@ -957,8 +957,9 @@ p {
 
   .site-header nav {
     width: 100%;
-    justify-content: space-between;
-    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 12px;
   }
 
   .site-header .site-mark {
@@ -966,7 +967,7 @@ p {
   }
 
   .site-header nav a {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .hero {

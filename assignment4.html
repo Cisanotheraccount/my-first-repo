@@ -7,9 +7,12 @@
   <meta name="description" content="NYC Rent Lines — a D3.js temporal and relational study of asking rents, rental inventory, and rental pressure across New York City's five boroughs.">
   <title>NYC Rent Lines — A Decade of Asking Rents</title>
   <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assignment4.css?v=20260719-relational-1">
-    <link rel="stylesheet" href="assignment5.css?v=20260719-relational-4">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="assignment4.css?v=20260719-relational-1">
+  <link rel="stylesheet" href="assignment5.css?v=20260719-relational-4">
+  <link rel="stylesheet" href="assignment6.css?v=20260722-geospatial-1">
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.js"></script>
 </head>
 
 <body class="intro-pending">
@@ -58,6 +61,7 @@
       <a href="#timeline">Timeline</a>
       <a href="#board">Data Board</a>
       <a href="#relational-network">Network</a>
+      <a href="#geospatial-map">MapDrop</a>
       <a href="#methodology">Methodology</a>
     </nav>
   </header>
@@ -377,6 +381,83 @@
       </div>
     </section>
 
+    <section class="geospatial-section" id="geospatial-map">
+      <div class="section-pad geospatial-pad">
+        <div class="section-heading section-heading-light">
+          <div class="intro-index">05</div>
+          <div>
+            <p class="eyebrow">Assignment 6 / Geospatial Structure</p>
+            <h2>Manhattan Hex MapDrop</h2>
+          </div>
+          <p>This Mapbox canvas turns Manhattan rental data into a tilted field of hexagonal columns. Move through time to watch neighborhood rent pressure rise and fall across the island.</p>
+        </div>
+
+        <div class="mapdrop-layout">
+          <div class="mapdrop-stage" data-mapdrop-stage>
+            <div class="mapdrop-toolbar" aria-label="Map timeline controls">
+              <div class="mapdrop-time">
+                <span>NOW VIEWING</span>
+                <strong data-map-month>JUN 2026</strong>
+              </div>
+              <label class="mapdrop-slider-label" for="rent-hex-time">Rent month</label>
+              <input id="rent-hex-time" class="mapdrop-slider" type="range" min="0" max="119" value="119" step="1">
+              <button class="mapdrop-reset" type="button" data-map-reset>Reset 2.5D view</button>
+            </div>
+
+            <div class="mapdrop-shell">
+              <div id="rent-hex-map" aria-label="Interactive Mapbox map of Manhattan rent pressure by neighborhood"></div>
+              <div class="mapdrop-preview" data-map-preview aria-hidden="true"></div>
+              <div class="mapdrop-loading" data-map-loading>
+                <span></span>
+                Loading Mapbox hex terrain...
+              </div>
+              <div class="mapdrop-token" data-map-token hidden>
+                <strong>Mapbox token needed for the full basemap.</strong>
+                <span>Add your public token in <code>mapbox-config.js</code>. The local fallback still shows the interactive hex data.</span>
+              </div>
+              <div class="mapdrop-tooltip" data-map-tooltip role="status" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <aside class="mapdrop-side">
+            <div class="mapdrop-readout" data-map-readout>
+              <span>Selected Hex</span>
+              <strong>Manhattan Rent Pressure</strong>
+              <p>Hover a hex for neighborhood detail. Click to lock a neighborhood and draw its rent timeline.</p>
+              <dl>
+                <div>
+                  <dt>Current rent</dt>
+                  <dd data-map-rent>--</dd>
+                </div>
+                <div>
+                  <dt>Since Jul 2016</dt>
+                  <dd data-map-growth>--</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="mapdrop-spark">
+              <span>Neighborhood Timeline</span>
+              <svg id="hex-sparkline" role="img" aria-label="Selected neighborhood rent timeline"></svg>
+            </div>
+
+            <div class="mapdrop-legend" aria-label="Rent pressure color legend">
+              <span><i class="legend-low"></i>Lower rent pressure</span>
+              <span><i class="legend-mid"></i>Mid pressure</span>
+              <span><i class="legend-high"></i>High pressure</span>
+            </div>
+
+            <p class="mapdrop-instructions">Use scroll or trackpad to zoom. Drag to pan. Hold right mouse / control-drag, or use the compass control, to rotate and tilt the map.</p>
+          </aside>
+        </div>
+
+        <div class="geospatial-reflection">
+          <span>Reflection</span>
+          <p>A geospatial structure lets this rental study move from a citywide line chart into a situated spatial model. For my design interests, this can become a way to map how economic pressure, neighborhood identity, media infrastructure, and spatial experience are distributed through the city.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="methodology" id="methodology">
       <div class="section-pad methodology-grid">
         <div>
@@ -400,13 +481,19 @@
             <span>04 / SNAPSHOT</span>
             <p>The page uses a fixed, locally stored snapshot covering July 2016 through June 2026. This keeps the analysis consistent and reproducible across visits.</p>
           </article>
+          <article>
+            <span>05 / GEOSPATIAL DATA</span>
+            <p>The MapDrop section uses Manhattan neighborhood rent values from StreetEasy and Manhattan 2020 Neighborhood Tabulation Area geometry from <a href="https://data.cityofnewyork.us/City-Government/2020-Neighborhood-Tabulation-Areas-NTAs-/9nt8-h7nd" target="_blank" rel="noreferrer">NYC Open Data</a>. Neighborhood rent values are represented as a stylized hexagonal terrain, not as official parcel or census boundaries.</p>
+          </article>
         </div>
       </div>
     </section>
   </main>
 
+  <script src="mapbox-config.js?v=20260722-geospatial-1"></script>
   <script src="assignment4.js?v=20260713-rent-only-2"></script>
   <script src="assignment5-network.js?v=20260719-relational-4"></script>
+  <script src="assignment6-map.js?v=20260722-geospatial-1"></script>
 </body>
 
 </html>
