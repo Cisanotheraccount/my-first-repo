@@ -20,6 +20,8 @@ The visual direction is a dark, polished MapDrop interface: a tilted map object 
 
 Each hex stores a Manhattan cell location and inherits the rent series from the nearest StreetEasy neighborhood centroid. The time slider updates the current month, median asking rent, column height, and color. The hex map is a stylized geospatial model, not an official neighborhood boundary map.
 
+Column height is mapped from median asking rent into an 18-420 meter extrusion range. This keeps the terrain legible while making high-rent and lower-rent areas visibly distinct.
+
 ## Interaction
 
 - The map opens in a 2.5D camera angle with pitch and bearing.

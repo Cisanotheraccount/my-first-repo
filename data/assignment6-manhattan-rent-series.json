@@ -135,8 +135,8 @@
   "heightScale": {
     "lowRentReference": 2195,
     "highRentReference": 7400,
-    "minHeightMeters": 22,
-    "maxHeightMeters": 240
+    "minHeightMeters": 18,
+    "maxHeightMeters": 420
   },
   "neighborhoodSourceCount": 31,
   "hexCellCount": 217,

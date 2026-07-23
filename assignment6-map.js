@@ -20,7 +20,7 @@
   const formatMonth = d3.timeFormat("%b %Y");
   const formatCurrency = d3.format("$,.0f");
   const formatPct = d3.format("+.1f");
-  const assetVersion = "20260723-hexgrid-2";
+  const assetVersion = "20260723-height-3";
   const initialCamera = {
     center: [-73.968, 40.788],
     zoom: 11.08,
@@ -214,8 +214,8 @@
         "fill-extrusion-height": [
           "+",
           ["get", "currentHeight"],
-          ["case", ["boolean", ["feature-state", "hover"], false], 28, 0],
-          ["case", ["boolean", ["feature-state", "selected"], false], 18, 0]
+          ["case", ["boolean", ["feature-state", "hover"], false], 36, 0],
+          ["case", ["boolean", ["feature-state", "selected"], false], 24, 0]
         ],
         "fill-extrusion-color": [
           "case",
