@@ -11,8 +11,11 @@
   <link rel="stylesheet" href="assignment4.css?v=20260719-relational-1">
   <link rel="stylesheet" href="assignment5.css?v=20260719-relational-4">
   <link rel="stylesheet" href="assignment6.css?v=20260723-smoothplay-30s">
+  <link rel="stylesheet" href="engagement-poll.css?v=20260726-engagement-3">
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 
 <body class="intro-pending">
@@ -63,6 +66,7 @@
       <a href="#relational-network">Network</a>
       <a href="#geospatial-map">MapDrop</a>
       <a href="#methodology">Methodology</a>
+      <a href="#living-priorities-poll">Poll</a>
     </nav>
   </header>
 
@@ -491,12 +495,121 @@
         </div>
       </div>
     </section>
+
+    <section class="engagement-poll-section" id="living-priorities-poll">
+      <div class="engagement-grid" aria-hidden="true"></div>
+      <div class="section-pad engagement-poll-pad">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow">Live Engagement Poll</p>
+            <h2>NYC Living<br>Priorities</h2>
+          </div>
+          <p>Rental data can describe prices and places. This live poll asks what people value when they make a housing decision.</p>
+        </div>
+
+        <div class="engagement-shell" data-poll-root>
+          <div class="poll-voting-panel">
+            <div class="poll-question">
+              <span>One question / anonymous totals</span>
+              <h3>When choosing a home in NYC, what matters most to you?</h3>
+              <p>Create a short anonymous voting code, then choose the single factor that has the greatest influence on your decision.</p>
+            </div>
+
+            <div class="poll-code-field">
+              <label for="living-priorities-code">Anonymous voting code</label>
+              <div class="poll-code-input">
+                <input id="living-priorities-code" data-poll-code type="text" minlength="6" maxlength="20" pattern="[A-Za-z0-9-]{6,20}" placeholder="Example: BLUE-2048" autocomplete="off" autocapitalize="characters" spellcheck="false">
+                <span data-poll-code-state>Required</span>
+              </div>
+              <small>Use 6-20 letters, numbers, or hyphens. Do not use your name or email. Only a one-way hash of this code is stored.</small>
+            </div>
+
+            <div class="poll-options" role="group" aria-label="NYC living priority choices">
+              <button class="poll-option poll-option-affordability" type="button" data-poll-option="affordability" disabled>
+                <span class="poll-option-index">01</span>
+                <strong>Affordability</strong>
+                <small>Keeping monthly rent within budget</small>
+              </button>
+              <button class="poll-option poll-option-space" type="button" data-poll-option="space" disabled>
+                <span class="poll-option-index">02</span>
+                <strong>Space</strong>
+                <small>Having more room and a better layout</small>
+              </button>
+              <button class="poll-option poll-option-commute" type="button" data-poll-option="commute" disabled>
+                <span class="poll-option-index">03</span>
+                <strong>Commute</strong>
+                <small>Getting to work or school efficiently</small>
+              </button>
+              <button class="poll-option poll-option-community" type="button" data-poll-option="community" disabled>
+                <span class="poll-option-index">04</span>
+                <strong>Community</strong>
+                <small>Neighborhood character and daily life</small>
+              </button>
+            </div>
+
+            <div class="poll-status-row">
+              <div class="poll-connection" data-poll-connection data-state="loading">
+                <i aria-hidden="true"></i>
+                <span>Connecting to Firebase...</span>
+              </div>
+              <p class="poll-feedback" data-poll-feedback role="status" aria-live="polite">Waiting for the live poll.</p>
+            </div>
+          </div>
+
+          <div class="poll-results-panel">
+            <div class="poll-results-header">
+              <div>
+                <span>Live collective result</span>
+                <strong><b data-poll-total>0</b> <em data-poll-total-label>total votes</em></strong>
+              </div>
+              <p>Each building rises with its share of the vote.</p>
+            </div>
+
+            <div class="poll-skyline" data-poll-skyline role="img" aria-label="Live poll results showing zero votes">
+              <div class="poll-tower-group poll-tower-affordability" data-poll-result="affordability">
+                <span class="poll-tower-percent" data-poll-percentage>0%</span>
+                <div class="poll-tower" aria-hidden="true"></div>
+                <strong>Affordability</strong>
+                <small><b data-poll-count>0</b> votes</small>
+              </div>
+              <div class="poll-tower-group poll-tower-space" data-poll-result="space">
+                <span class="poll-tower-percent" data-poll-percentage>0%</span>
+                <div class="poll-tower" aria-hidden="true"></div>
+                <strong>Space</strong>
+                <small><b data-poll-count>0</b> votes</small>
+              </div>
+              <div class="poll-tower-group poll-tower-commute" data-poll-result="commute">
+                <span class="poll-tower-percent" data-poll-percentage>0%</span>
+                <div class="poll-tower" aria-hidden="true"></div>
+                <strong>Commute</strong>
+                <small><b data-poll-count>0</b> votes</small>
+              </div>
+              <div class="poll-tower-group poll-tower-community" data-poll-result="community">
+                <span class="poll-tower-percent" data-poll-percentage>0%</span>
+                <div class="poll-tower" aria-hidden="true"></div>
+                <strong>Community</strong>
+                <small><b data-poll-count>0</b> votes</small>
+              </div>
+            </div>
+
+            <p class="poll-data-note">This experiment stores a one-way hash of each voting code and its selected option. It does not collect names, contact details, income, or location.</p>
+          </div>
+        </div>
+
+        <div class="engagement-reflection">
+          <span>Reflection</span>
+          <p>I could use an engagement component to turn my urban data visualizations into a two-way experience. This poll allows visitors to identify what matters most to them when choosing a home in New York, and the aggregated responses could be compared with rental, transportation, and neighborhood data. Because the poll only collects anonymous totals, it provides a lightweight form of participation without collecting personal or location information.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="mapbox-config.js?v=20260722-geospatial-1"></script>
+  <script src="firebase-config.js?v=20260726-engagement-3"></script>
   <script src="assignment4.js?v=20260713-rent-only-2"></script>
   <script src="assignment5-network.js?v=20260719-relational-4"></script>
   <script src="assignment6-map.js?v=20260723-smoothplay-30s"></script>
+  <script src="engagement-poll.js?v=20260726-engagement-3"></script>
 </body>
 
 </html>

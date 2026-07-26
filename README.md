@@ -47,3 +47,14 @@ The geospatial structure is added inside `assignment4.html#geospatial-map`.
 - `data/assignment6-manhattan-nta.geojson` stores the Manhattan NTA reference geometry from NYC Open Data.
 - `assignment6-geospatial-notes.md` documents the aesthetic, data method, interaction, and reflection.
 - `submission/assignment6-mapdrop-final-local.png` is the ready-to-upload screenshot of the Mapbox update.
+
+## NYC Living Priorities
+
+The Firebase engagement poll is added at the end of `assignment4.html#living-priorities-poll`.
+
+- `engagement-poll.css` styles the voting interface and live result skyline.
+- `engagement-poll.js` connects the poll to Firebase Realtime Database and updates the results in real time.
+- `firebase-config.js` contains the Firebase web app configuration.
+- `firebase-database.rules.json` limits each anonymous voting-code hash to one immutable choice.
+- `engagement-notes.md` documents the method, data ethics, visual system, and reflection.
+- `submission/nyc-living-priorities-poll.png` is the ready-to-upload screenshot of the live poll.

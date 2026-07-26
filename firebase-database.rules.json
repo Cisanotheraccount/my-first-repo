@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "livingPrioritiesPoll": {
+      "votes": {
+        ".read": true,
+        "$voterId": {
+          ".write": "!data.exists() && newData.exists()",
+          ".validate": "$voterId.matches(/^v_[a-f0-9]{64}$/) && newData.isString() && (newData.val() === 'affordability' || newData.val() === 'space' || newData.val() === 'commute' || newData.val() === 'community')"
+        }
+      }
+    }
+  }
+}
