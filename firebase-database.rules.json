@@ -10,6 +10,15 @@
           ".validate": "$voterId.matches(/^v_[a-f0-9]{64}$/) && newData.isString() && (newData.val() === 'affordability' || newData.val() === 'space' || newData.val() === 'commute' || newData.val() === 'community')"
         }
       }
+    },
+    "agentUsage": {
+      "$uid": {
+        "$day": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid && $day.matches(/^\\d{4}-\\d{2}-\\d{2}$/)",
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10 && ((!data.exists() && newData.val() === 1) || (data.isNumber() && newData.val() === data.val() + 1))"
+        }
+      }
     }
   }
 }

@@ -12,10 +12,12 @@
   <link rel="stylesheet" href="assignment5.css?v=20260719-relational-4">
   <link rel="stylesheet" href="assignment6.css?v=20260723-smoothplay-30s">
   <link rel="stylesheet" href="engagement-poll.css?v=20260726-engagement-3">
+  <link rel="stylesheet" href="agent-chat.css?v=20260802-agents-1">
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.26.0/mapbox-gl.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 
 <body class="intro-pending">
@@ -67,6 +69,7 @@
       <a href="#geospatial-map">MapDrop</a>
       <a href="#methodology">Methodology</a>
       <a href="#living-priorities-poll">Poll</a>
+      <a href="#nyc-housing-guide">Guide</a>
     </nav>
   </header>
 
@@ -602,14 +605,119 @@
         </div>
       </div>
     </section>
+
+    <section class="housing-guide-section" id="nyc-housing-guide">
+      <div class="housing-guide-grid" aria-hidden="true"></div>
+      <div class="section-pad housing-guide-pad">
+        <div class="housing-guide-heading">
+          <div>
+            <p class="eyebrow">Data Interpretation Agent</p>
+            <h2>NYC Housing<br>Guide</h2>
+          </div>
+          <p>Ask focused questions about the rent, inventory, vacancy, network, and Manhattan neighborhood data presented on this page.</p>
+        </div>
+
+        <div class="agent-layout" data-agent-root>
+          <aside class="agent-context-panel">
+            <div class="agent-auth-card">
+              <div class="agent-panel-label">Access</div>
+              <div class="agent-auth-status" data-agent-auth-status data-state="loading">
+                <i aria-hidden="true"></i>
+                <span>Checking Firebase authentication...</span>
+              </div>
+
+              <button class="agent-google-button" type="button" data-agent-login disabled>
+                <span aria-hidden="true">G</span>
+                Continue with Google
+              </button>
+
+              <div class="agent-user-card" data-agent-user hidden>
+                <div class="agent-user-avatar" data-agent-avatar aria-hidden="true">NY</div>
+                <div>
+                  <span>Signed in</span>
+                  <strong data-agent-user-name>Google user</strong>
+                </div>
+                <button type="button" data-agent-logout>Sign out</button>
+              </div>
+            </div>
+
+            <div class="agent-scope-card">
+              <div class="agent-panel-label">Evidence Boundary</div>
+              <strong>Fixed study data only</strong>
+              <p>The guide reads the locally stored July 2016-June 2026 study. It does not search live listings or provide legal, financial, or housing advice.</p>
+              <dl>
+                <div>
+                  <dt>Coverage</dt>
+                  <dd>5 boroughs</dd>
+                </div>
+                <div>
+                  <dt>Map sample</dt>
+                  <dd>31 neighborhoods</dd>
+                </div>
+                <div>
+                  <dt>Daily limit</dt>
+                  <dd>10 requests</dd>
+                </div>
+              </dl>
+            </div>
+
+            <p class="agent-privacy-note">Firebase identifies the signed-in account and stores only a daily request count. This website does not save conversation text.</p>
+          </aside>
+
+          <article class="agent-chat-panel" aria-label="NYC Housing Guide chat">
+            <div class="agent-chat-topbar">
+              <div>
+                <span class="agent-live-dot" aria-hidden="true"></span>
+                <strong>Evidence desk</strong>
+              </div>
+              <div class="agent-chat-actions">
+                <span data-agent-quota>10 requests / UTC day</span>
+                <button type="button" data-agent-clear disabled>Clear chat</button>
+              </div>
+            </div>
+
+            <div class="agent-messages" data-agent-messages role="log" aria-live="polite" aria-relevant="additions text">
+              <div class="agent-message agent-message-guide">
+                <span>Guide</span>
+                <p>Sign in with Google to ask about the evidence shown on this page.</p>
+              </div>
+            </div>
+
+            <div class="agent-suggestions" aria-label="Suggested questions">
+              <button type="button" data-agent-suggestion="Which borough had the largest rent increase from July 2016 to June 2026?" disabled>Largest borough increase</button>
+              <button type="button" data-agent-suggestion="How did rental inventory and asking rent change around 2020 and 2021?" disabled>2020-2021 shift</button>
+              <button type="button" data-agent-suggestion="What does the Manhattan hex map reveal about neighborhood differences?" disabled>Read the hex map</button>
+            </div>
+
+            <form class="agent-composer" data-agent-form>
+              <label class="agent-sr-only" for="housing-guide-input">Ask the NYC Housing Guide</label>
+              <textarea id="housing-guide-input" data-agent-input rows="2" maxlength="500" placeholder="Sign in to ask about the study..." disabled></textarea>
+              <div class="agent-composer-footer">
+                <span><b data-agent-character-count>0</b> / 500</span>
+                <button type="submit" data-agent-send disabled>Send</button>
+              </div>
+            </form>
+
+            <p class="agent-feedback" data-agent-feedback role="status" aria-live="polite">Waiting for authentication.</p>
+          </article>
+        </div>
+
+        <div class="agent-reflection">
+          <span>Reflection</span>
+          <p>I could use a chatbot agent to help visitors interpret complex urban datasets without requiring them to understand every chart interface. In this project, the agent translates the 2016-2026 NYC rent, inventory, vacancy, and neighborhood evidence into concise answers while remaining bounded to the data shown on the site. Firebase authentication and anonymous usage counts support accountable access without storing conversation content.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="mapbox-config.js?v=20260722-geospatial-1"></script>
   <script src="firebase-config.js?v=20260726-engagement-3"></script>
+  <script src="agent-config.js?v=20260802-agents-1"></script>
   <script src="assignment4.js?v=20260713-rent-only-2"></script>
   <script src="assignment5-network.js?v=20260719-relational-4"></script>
   <script src="assignment6-map.js?v=20260723-smoothplay-30s"></script>
   <script src="engagement-poll.js?v=20260726-engagement-3"></script>
+  <script src="agent-chat.js?v=20260802-agents-1"></script>
 </body>
 
 </html>

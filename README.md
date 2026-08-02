@@ -58,3 +58,15 @@ The Firebase engagement poll is added at the end of `assignment4.html#living-pri
 - `firebase-database.rules.json` limits each anonymous voting-code hash to one immutable choice.
 - `engagement-notes.md` documents the method, data ethics, visual system, and reflection.
 - `submission/nyc-living-priorities-poll.png` is the ready-to-upload screenshot of the live poll.
+
+## NYC Housing Guide
+
+The authenticated chatbot agent is added at the end of `assignment4.html#nyc-housing-guide`.
+
+- `agent-chat.css` styles the responsive sign-in and conversation interface.
+- `agent-chat.js` manages Firebase Google Authentication, per-user session history, and secure Worker requests.
+- `agent-config.js` contains only the public Cloudflare Worker endpoint.
+- `agent-worker/` contains the tested Cloudflare proxy, fixed study context, and deployment configuration.
+- `firebase-database.rules.json` limits each authenticated UID to ten counted requests per UTC day.
+- `agents-notes.md` documents the agent role, architecture, evidence boundary, privacy ethics, and project reflection.
+- `submission/nyc-housing-guide-agent.png` is the ready-to-upload screenshot of the public agent interface.
