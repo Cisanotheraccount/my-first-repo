@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const feedback = root.querySelector("[data-agent-feedback]");
 
   let auth = null;
+  let database = null;
   let currentUser = null;
   let activeUid = null;
   let history = [];
@@ -102,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     const app = existingApp || window.firebase.initializeApp(firebaseConfig, appName);
     auth = app.auth();
+    database = app.database();
 
     auth.onAuthStateChanged(
       function (user) {
@@ -113,6 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (user && workerUrl) {
           checkServiceHealth();
+        }
+
+        if (user) {
+          syncUsageCount(user.uid);
         }
       },
       function (error) {
@@ -210,6 +216,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     refreshControls();
     exposeState();
+  }
+
+  async function syncUsageCount(uid) {
+    if (!database) {
+      return;
+    }
+
+    const now = new Date();
+    const day = now.toISOString().slice(0, 10);
+    const resetAt = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)).toISOString();
+
+    try {
+      const snapshot = await database.ref("agentUsage/" + uid + "/" + day).once("value");
+      const storedValue = snapshot.val();
+      const count = storedValue === null ? 0 : Number(storedValue);
+
+      if (currentUser && currentUser.uid === uid && Number.isInteger(count) && count >= 0 && count <= 10) {
+        updateQuota(10 - count, resetAt);
+      }
+    } catch (error) {
+      console.warn("Daily request count could not be read:", error);
+    }
   }
 
   async function sendCurrentMessage() {
