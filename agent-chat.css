@@ -213,6 +213,10 @@
   opacity: 0.46;
 }
 
+.agent-google-button[hidden] {
+  display: none;
+}
+
 .agent-user-card {
   display: grid;
   align-items: center;
